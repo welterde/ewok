@@ -1,0 +1,9 @@
+EwokMUD Copyright (C) 2010 Bobby Bailey
+
+In its current form, the EwokMUD server contains no significant modifications
+or improvements to the CoffeeMud server. EwokMUD's current focus is on
+polishing the user and developer documentation and creating quality examples
+to demonstrate the full capabilities and operations of the CoffeeMud server.
+
+To proceed with installation and configuration, please read CoffeeMud's
+original README which is located in README.CoffeeMud.
