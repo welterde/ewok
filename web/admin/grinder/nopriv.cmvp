@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<html>
+<head>
+	<!-- tell spiders to sod off -->
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<link rel="STYLESHEET" TYPE="TEXT/CSS" HREF="/grinder/grinder.css">
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>CoffeeMud MUDGrinder</title>
+</head>
+
+<body>
+
+<CENTER>
+<IMG SRC="/grinder/images/grinder.gif" WIDTH=78 HEIGHT=122 ALT="" BORDER="0"><br>
+<h3>MUDGrinder</H3>
+<P>
+<FORM NAME=NEWAREA METHOD=POST ACTION="/index.cmvp" TARGET=_top>
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<B><FONT COLOR=RED>Your account access does not allow you to use 
+the MUDGrinder system.</FONT><P>
+<INPUT TYPE=SUBMIT NAME=CONTINUE VALUE="Continue">
+</FORM>
+</body>
+</HTML>

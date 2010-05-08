@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<link rel="coffeemud icon" href="images/coffeemud.ico" >
+	<link rel="STYLESHEET" TYPE="TEXT/CSS" HREF="coffeemud.css">
+	<title>@MUDSERVERVERSION@, @WEBSERVERVERSION@ '@WEBSERVERNAME@'</title>
+</head>
+
+<body>
+<CENTER>
+<FONT COLOR=BLUE><B>@WEBSERVERVERSION@ '@WEBSERVERNAME@' on port @WEBSERVERPORT@
+</CENTER><P>
+<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=320 VALIGN=TOP>
+<IMG src="images/logo.gif">
+</TD><TD VALIGN=TOP>
+<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+<TR><TD WIDTH=100% VALIGN=TOP><FONT COLOR=#90ee90><B>
+Server status: <a href="gamestatus.cmvp"><b>@MUDSERVERSTATUS@</B></a><BR>
+<FONT COLOR=GREEN>Connection: </FONT><FONT COLOR=BLUE>@MudInfo?DOMAIN@:@MudInfo?PORT@</FONT><BR>
+</B></FONT></TD></TR>
+<TR><TD WIDTH=100%><FONT COLOR=ORANGE><B>
+Players currently online: <FONT COLOR=RED><b>@NUMPLAYERS@</B></FONT>
+</B></FONT></TD></TR>
+<TR><TD WIDTH=100%>
+<BR>
+<LI><a href="siplet/index.html"><FONT COLOR=GREEN><B>Play NOW</B></FONT></a><FONT COLOR=GREEN>&nbsp;(IE/NS7/FF)!</B></FONT>&nbsp;&nbsp;<a href="telnet:@MudInfo?DOMAIN@"><FONT SIZE=-2 COLOR=GREEN><I>(Others)</I></FONT></a>
+<NOSCRIPT>
+<LI><a href="telnet:@MudInfo?DOMAIN@"><FONT COLOR=GREEN><B>Play NOW!</B></FONT></a>
+</NOSCRIPT>
+<LI><a href="access.cmvp"><FONT COLOR=GREEN><B>Player Access</B></FONT></a>
+<LI><a href="forums.cmvp"><FONT COLOR=GREEN><B>Public Forums</B></FONT></a>
+<LI><a href="helps.cmvp?FIRSTLETTER=A"><FONT COLOR=GREEN><B>Help Topics</B></FONT></a>
+<LI><a href="socials.cmvp"><FONT COLOR=GREEN><B>Socials List</B></FONT></a>
+<LI><a href="areas.cmvp"><FONT COLOR=GREEN><B>Installed Areas Information</B></FONT></a>
+<LI><a href="clans.cmvp"><FONT COLOR=GREEN><B>Current Clans Information</B></FONT></a>
+<LI><a href="deities.cmvp"><FONT COLOR=GREEN><B>Installed Deities</B></FONT></a>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;<B>CoffeeMud Info</B><BR>
+<LI><a href="cmintro.html"><FONT COLOR=GREEN><B>What is CoffeeMUD?</B></FONT></a>
+<LI><a href="mudintro.html"><FONT COLOR=GREEN><B>What are MUDs?</B></FONT></a>
+<LI><a href="guides/Features.html"><FONT COLOR=GREEN><B>CoffeeMud features</B></FONT></a>
+<LI><a href="sounds.zip"><FONT COLOR=GREEN><B>Download Sounds for MSP support</B></FONT></a>
+<P>
+<LI><B>Player Races: </B>
+	@loop@
+	@RaceNext@
+	<A href="races.cmvp#@RaceID@"><FONT COLOR=PURPLE>@RaceName@</FONT></A>
+	@back@
+<LI><B>Player Abilities: </B>
+					  <a href="spells.cmvp?ABILITYTYPE=SPELL"><FONT COLOR=RED>Spells</FONT></a> 
+					  <a href="ables.cmvp?ABILITYTYPE=SONG"><FONT COLOR=RED>Songs</FONT></a>
+					  <a href="ables.cmvp?ABILITYTYPE=PRAYER"><FONT COLOR=RED>Prayers</FONT></a>  
+					  <a href="ables.cmvp?ABILITYTYPE=CHANT"><FONT COLOR=RED>Chants</FONT></a>  
+					  <a href="skills.cmvp"><FONT COLOR=RED>Skills</FONT></a>
+					  <a href="edus.cmvp"><FONT COLOR=RED>Expertises</FONT></a>  
+<P>
+@BaseCharClassNext?RESET@
+@loop@
+@BaseCharClassNext@
+<LI><B>@BaseCharClassName@s: </B>
+	@CharClassNext?RESET@
+	@loop@
+		@CharClassNext@
+		<A href="classes.cmvp?CLASS=@CharClassID@"><FONT COLOR=BLUE>@CharClassName@</FONT></A>
+	@back@
+	&nbsp;
+@back@
+	<BR><BR>
+</TD></TR>
+</TABLE></TR></TR></TABLE>
+</body>
+</html>

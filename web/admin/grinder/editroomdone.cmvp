@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+ 
+@MUDGrinder?EDITROOM@
+
+@if?RequestParameter?SINGLEMOB@
+<HTML><BODY><SCRIPT LANGUAGE=JavaScript>
+<!--
+	var v='@RequestParameter?ERRMSG@';
+	if(v!='') alert(v);
+	opener.Refresh();
+	window.close();
+//-->
+</SCRIPT></BODY></HTML>
+@endif@
+
+@if?!CheckReqParm?ERRMSG=@ @AddFile?/grinder/editroom.cmvp@ @else@ @AddFile?/grinder/modarea.cmvp@ @endif@
+
+@endif@ 
+@endif@ 

@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+	<!-- tell spiders to sod off -->
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<link rel="STYLESHEET" TYPE="TEXT/CSS" HREF="/grinder/grinder.css">
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>CoffeeMud MUDGrinder</title>
+	<SCRIPT LANGUAGE=JavaScript>
+	<!--
+		function AddNewItem()
+		{
+			document.AREAEDIT.action='/grinder/addroomitem.cmvp';
+			document.AREAEDIT.target='_top';
+			document.AREAEDIT.submit();
+		}
+		function AddItem(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function EditItem(ME)
+		{
+			document.AREAEDIT.ITEM.value=ME;
+			document.AREAEDIT.action='/grinder/editroomitem.cmvp';
+			document.AREAEDIT.target='_top';
+			document.AREAEDIT.submit();
+		}
+		function EditMOB(ME)
+		{
+			document.AREAEDIT.MOB.value=ME;
+			document.AREAEDIT.action='/grinder/editmob.cmvp';
+			document.AREAEDIT.target='_top';
+			document.AREAEDIT.submit();
+		}
+		function AddNewMOB()
+		{
+			document.AREAEDIT.action='/grinder/addmob.cmvp';
+			document.AREAEDIT.target='_top';
+			document.AREAEDIT.submit();
+		}
+		function AddMOB(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function DelItem(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function DelMOB(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function EditBehavior(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddBehavior(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function EditAffect(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddAffect(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function ChangedClass()
+		{
+			document.AREAEDIT.CHANGEDCLASS.value="true";
+			ReShow();
+		}
+		function ReShow()
+		{
+			document.AREAEDIT.action='/grinder/editroomform.cmvp';
+			document.AREAEDIT.target='MAP';
+			document.AREAEDIT.submit();
+		}
+	//-->
+	</SCRIPT>
+</head>
+<BODY>
+<CENTER>
+<h3>Modify Room Data for '@RoomID@'.</H3>
+<P><FONT COLOR=RED><H1>@RequestParameter?ERRMSG@</H1></FONT>
+<BR>
+<FORM NAME=AREAEDIT TARGET=_top METHOD=POST ACTION="/grinder/editroomdone.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=ROOM VALUE="@RoomID@">
+<INPUT TYPE=HIDDEN NAME=CHANGEDCLASS VALUE="">
+<INPUT TYPE=HIDDEN NAME=AREA VALUE="@AreaName@">
+<INPUT TYPE=HIDDEN NAME=MAPSTYLE VALUE="@RequestParameter?MAPSTYLE@">
+<INPUT TYPE=HIDDEN NAME=MAPLEVEL VALUE="@RequestParameter?MAPLEVEL@">
+<INPUT TYPE=HIDDEN NAME=ITEM VALUE="">
+<INPUT TYPE=HIDDEN NAME=MOB VALUE="">
+@if?RequestParameter?SINGLEMOB@
+	<INPUT TYPE=HIDDEN NAME=SINGLEMOB VALUE="@RequestParameter?SINGLEMOB@">
+	<INPUT TYPE=HIDDEN NAME=DELMOB VALUE="@RequestParameter?DELMOB@">
+@endif@
+<INPUT TYPE=HIDDEN NAME=ACTION VALUE="MODIFYROOM">
+<TABLE WIDTH=600 BORDER=1 CELLSPACING=0 CELLPADDIN=0>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Room Class:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2>
+	<SELECT NAME=CLASSES ONCHANGE="ChangedClass();">
+	@RoomData?CLASSES@
+	</SELECT>
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Room Title:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2><INPUT TYPE=TEXT NAME=NAME SIZE=60 VALUE="@RoomData?NAME@"></TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Description:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2>
+    <TEXTAREA NAME=DESCRIPTION ROWS=5 COLS=60>@RoomData?DESCRIPTION@</TEXTAREA>
+    </TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>GIF filename:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2><INPUT TYPE=TEXT NAME=IMAGE SIZE=50 VALUE="@RoomData?IMAGE@"></TD>
+</TR>
+@if?RoomData?ISGRID@
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Grid Sizes:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2>
+    X:<INPUT TYPE=TEXT NAME=XGRID SIZE=5 MAXLENGTH=2 VALUE="@RoomData?XGRID@">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    Y:<INPUT TYPE=TEXT NAME=YGRID SIZE=5 MAXLENGTH=2 VALUE="@RoomData?YGRID@">
+    </TD>
+</TR>
+@endif@
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Behaviors:</B></FONT>
+	<BR><A target=HELP HREF="/behaviors.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a></TD>
+    <TD WIDTH=500 COLSPAN=2>
+	@RoomData?BEHAVIORS@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Affects:</B></FONT>
+	<BR><A target=HELP href="/affects.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a></TD>
+    <TD WIDTH=500 COLSPAN=2>
+	@RoomData?AFFECTS@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>MOBs:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2>
+    @RoomData?MOBLIST@
+    </TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>Items:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2>
+    @RoomData?ITEMLIST@
+    </TD>
+</TR>
+<TR>
+    <TD WIDTH=600 COLSPAN=3 ALIGN=CENTER>
+	<INPUT TYPE=SUBMIT NAME=FINISHED VALUE="Finished">
+	</CENTER>
+	</TD>
+</TR>
+</TABLE>
+</FORM>
+</CENTER>
+@if?RequestParameter?SINGLEMOB@
+	<SCRIPT LANGUAGE=JavaScript>
+	<!--
+		var delmob='@RequestParameter?DELMOB@';
+		
+		document.AREAEDIT.submit();
+	//-->
+	</SCRIPT>
+@endif@
+<SCRIPT
+</BODY>
+</HTML>
+@endif@
+@endif@

@@ -1,0 +1,241 @@
+<HTML>
+<HEAD>
+<LINK REL=StyleSheet HREF="term.css" TYPE="text/css">
+	<link rel="coffeemud icon" href="../images/coffeemud.ico" >
+<SCRIPT LANGUAGE=JavaScript src="dropdown.js"></SCRIPT>
+</HEAD>
+<BODY BGCOLOR=BLACK ONCLICK="top.term.front(myname,mynum);">
+<script language=JavaScript>
+var mynum = top.term.currentWindow;
+var myname='dwindow'+top.term.currentWindow;
+var mydivname='ewindow'+top.term.currentWindow;
+var gauges=new Array();
+var theapplet = null;
+
+var limit=50000;
+var halflimit=limit/2;
+var tenthlimit=limit/10;
+
+function closeWindow()
+{
+    //var theapplet=document.getElementById("myApplet");
+    theapplet.disconnectFromURL();
+    top.document.location.href='/index.cmvp';
+}
+function reconnect()
+{
+    //var theapplet=document.getElementById("myApplet");
+    theapplet.disconnectFromURL();
+    setTimeout('connect("@MudInfo?DOMAIN@",@MudInfo?PORT@);',500);
+}
+
+function addToWindow(s)
+{
+    if(s.length>0)
+    {
+        var thespan=document.getElementById("DISPLAYSPAN");
+        var theend=document.getElementById("NODISPLAY");
+        if(thespan.innerHTML.length>(limit+halflimit))
+        {
+            var x=thespan.innerHTML;
+            var xcess=x.length-limit;
+            var br='<BR>';
+            var y=x.indexOf(br,xcess);
+            if(y<0) 
+            {
+            	br='<BR >';
+	            y=x.indexOf(br,xcess);
+            }
+            if(y<0) 
+            {
+            	br='<br>';
+	            y=x.indexOf(br,xcess);
+            }
+            if(y<0) 
+            {
+            	br='<br >';
+	            y=x.indexOf(br,xcess);
+            }
+            if((y<0)||(y>xcess+tenthlimit))
+                y=x.indexOf(br,xcess/2);
+            if(y>=0)
+                x=x.substring(y+br.length);
+            else
+            while(x.length>limit)
+            {
+                var y=x.indexOf(br);
+                if(y<0) break;
+                x=x.substring(y+br.length);
+            }
+            thespan.innerHTML=x;
+        }
+        thespan.innerHTML=thespan.innerHTML+s;
+        theend.scrollIntoView(false);
+        if(mynum != top.term.currentWindow)
+	    	top.bar.lightgreenColor(mynum);
+    }
+}
+function displayData()
+{
+    //var theapplet=document.getElementById("myApplet");
+    if(!theapplet.isConnectedToURL())
+    {
+        var thespan=top.term.document.getElementById(myname+'bar');
+        thespan.style.backgroundColor='red'
+        thespan=top.term.document.getElementById(myname+'namer');
+        thespan.style.backgroundColor='red'
+        top.bar.redColor(mynum);
+        //alert('Lost connection.'); // red is enough
+    }
+    else
+    {
+        theapplet.readURLData();
+        var t=theapplet.getURLData();
+        var s="";
+        s=s+t;
+        addToWindow(s);
+        t=theapplet.getJScriptCommands();
+        s="";
+        s=s+t;
+        if(s.length>0) eval(s);
+        setTimeout('displayData();',100);
+    }
+}
+function sendData(me)
+{
+    //var theapplet=document.getElementById("myApplet");
+	var s=''+me;
+    theapplet.sendData(s);
+}
+
+function createGauge(entity,caption,color,value,max)
+{
+    var gaugedata=new Array(5);
+    gaugedata[0]=entity;
+    gaugedata[1]=caption;
+    gaugedata[2]=color;
+    gaugedata[3]=value;
+    gaugedata[4]=max;
+    gauges[gauges.length]=gaugedata;
+    modifyGauge(entity,value,max);
+}
+function removeGauge(entity)
+{
+    var oldgauges=gauges;
+    gauges=new Array();
+    var o=0;
+    var ndex=0;
+    for(o=0;o<oldgauges.length;o++)
+    {
+        var gaugedata=oldgauges[o];
+        if(gaugedata[0]!=entity)
+        {
+            gauges[ndex]=gaugedata;
+            ndex++;
+        }
+    }
+    modifyGauge(entity,-1,-1);
+}
+function modifyGauge(entity,value,max)
+{
+    var div=top.term.document.getElementById(myname+'extracontent');
+    if(gauges.length==0)
+        div.innerHTML='';
+    else
+    {
+        var gaugewid=100;
+        var s='<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=1><TR>';
+        var i=0;
+        var cellwidth=100/gauges.length;
+        for(i=0;i<gauges.length;i++)
+        {
+            var gaugedata=gauges[i];
+            if(gaugedata[0]==entity)
+            {
+                gaugedata[3]=value;
+                gaugedata[4]=max;
+            }
+        }
+        for(i=0;i<gauges.length;i++)
+        {
+            var gaugedata=gauges[i];
+            s+='<TD WIDTH='+cellwidth+'%>';
+            s+='<FONT STYLE="color: '+gaugedata[2]+'" SIZE=-2>'+gaugedata[1]+'</FONT><BR>';
+            var gaugedata=gauges[i];
+            var fullwidth=100-gaugedata[3];
+            var lesswidth=gaugedata[3];
+            s+='<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0 BORDER=0 HEIGHT=5><TR HEIGHT=5>';
+            s+='<TD STYLE="background-color: '+gaugedata[2]+'" WIDTH='+lesswidth+'%></TD>';
+            s+='<TD STYLE="background-color: black" WIDTH='+fullwidth+'%></TD>';
+            s+='</TR></TABLE>';
+            s+='</TD>';
+        }
+        s+='</TR></TABLE>'
+        div.innerHTML=s;
+    }
+}
+function NoJava()
+{
+    var thespan=document.getElementById("DISPLAYSPAN");
+    thespan.innerHTML='<P><BR><FONT COLOR=RED SIZE=4>It does not appear that your browser has the proper version of the Java Runtime Environment installed.  Please visit <a href=http://java.sun.com>java.sun.com</a> to download the JRE.  Then restart your browser and try this page again.  If problems persist, make sure your browser has the <I>Allow Applet Installation</I> and <I>Allow Scripting</I> features enabled.</FONT><P>';
+}
+function connect(url,port)
+{
+    //var theapplet=document.getElementById("myApplet");
+    window.onerror=new Function('NoJava();');
+    var s=theapplet.info();
+    window.onerror=null;
+    var thespan=top.term.document.getElementById(myname+'namer');
+    thespan.innerHTML=s
+    gauges=new Array(0);
+    var connectWorked = theapplet.connectToURL(url,port); 
+    if(!connectWorked)
+    {
+        connectWorked = theapplet.connectToURL(url,@WebServerPort?CURRENT@); 
+        if(connectWorked) sendData('MUD\n\n\r\r');
+    }
+    if(!connectWorked)
+        alert('Could not connect.');
+    else
+    {
+        thespan.style.backgroundColor='green'
+        thespan=top.term.document.getElementById(myname+'bar');
+        thespan.style.backgroundColor='green'
+        top.bar.greenColor(mynum);
+        setTimeout('displayData(); top.entry.boxFocus();',100);
+    }
+}
+function addToPrompt(x,att)
+{
+    top.entry.document.ENTER.TEXT.value=x;
+    if(!att)
+        top.entry.sendText(x);
+    else
+        top.entry.document.ENTER.TEXT.value+=" ";
+}
+function goDefault(x)
+{
+	top.term.front('dwindow'+x,x);
+}
+top.term.allwindows[top.term.currentWindow]=this;
+</SCRIPT>
+<applet
+    code="com.planet_ink.siplet.applet.Siplet"
+    archive="/siplet/jzlib.jar,/siplet/siplet.jar"
+    codebase="siplet.jar"
+    width="0"
+    height="0"
+    name="myApplet"
+    id="myApplet"
+    mayscript="TRUE">
+</applet><BR>
+<DIV ID=DISPLAYSPAN NAME=DISPLAYSPAN>
+</DIV>
+<DIV ID=NODISPLAY NAME=NODISPLAY></DIV>
+<script language=JavaScript>
+    theapplet=document.getElementById("myApplet").create();
+    top.term.allapplets[top.term.currentWindow] = theapplet;
+    setTimeout('connect("@MudInfo?DOMAIN@",@MudInfo?PORT@);',500);
+//-->
+</script>
+</BODY></HTML>

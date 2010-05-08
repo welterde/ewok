@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_STAT=true&AUTH_CMDPLAYERS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+</head>
+<body BGCOLOR=BLACK>
+@if?CheckReqParm?FUNCTION=DELETE@ @PlayerDelete@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+window.close();
+//-->
+</SCRIPT>
+@endif@
+@if?CheckReqParm?FUNCTION=BOOT@ @PlayerOnline?BOOT@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+alert('Player @PlayerID@ has been booted from the system.');
+document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+//-->
+</SCRIPT>
+@endif@
+@if?CheckReqParm?FUNCTION=DELIMG@ @PlayerOnline?DELIMG@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+alert('The personalized image for @PlayerID@ has been deleted.');
+document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+//-->
+</SCRIPT>
+@endif@
+@if?CheckReqParm?FUNCTION=BANBYNAME@ @PlayerOnline?BANBYNAME@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+alert('Player @PlayerID@ has been banned.');
+document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+//-->
+</SCRIPT>
+@endif@
+@if?CheckReqParm?FUNCTION=BANBYEMAIL@ @PlayerOnline?BANBYEMAIL@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+alert('Player Email Address has been banned.');
+document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+//-->
+</SCRIPT>
+@endif@
+@if?CheckReqParm?FUNCTION=BANBYIP@ @PlayerOnline?BANBYIP@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+alert('Player IP Address has been banned.');
+document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+//-->
+</SCRIPT>
+@endif@
+@if?CheckReqParm?FUNCTION=EDITPLAYER@ @MUDGrinder?EDITPLAYER@ 
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+alert('Player has been modified.');
+document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+//-->
+</SCRIPT>
+@endif@
+</BODY>
+</HTML>
+@endif@
+@endif@

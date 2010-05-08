@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_CMDQUESTS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>Manage Quests/Scripts</title>
+	<script language=JavaScript>
+	<!--
+		function Browse(named)
+		{
+			var strFeatures="top=200,left=50,scrollbars=yes,resizeable=no,height=400,width=250,alwaysRaised=yes,dependent=yes";
+			var w2=window.open("/grinder/browse.cmvp?AUTH=@Authenticate?AUTH@&PATH="+named,"Browse",strFeatures,false);
+		}
+		function Refresh()
+		{
+			document.QUESTS.QUEST.value="";
+			document.QUESTS.FUNCTION.value="";
+			document.QUESTS.action='/grinder/quests.cmvp';
+			document.QUESTS.submit();
+		}
+		function Quest(action)
+		{
+			var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+			w=window.open("quest.cmvp?AUTH=@Authenticate?AUTH@&QUEST="+action,
+				"Quest",strFeatures, false);
+		}
+		function QuestWizard(action)
+		{
+			var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+			w=window.open("questmaker.cmvp?AUTH=@Authenticate?AUTH@",
+				"Quest",strFeatures, false);
+		}
+		function Clicked(quest, action)
+		{
+			if((action=='DELETE')&&(!confirm('Confirm: Delete this quest?')))
+				return;
+			document.QUESTS.QUEST.value=quest;
+			document.QUESTS.FUNCTION.value=action;
+			document.QUESTS.action='/grinder/quests.cmvp';
+			document.QUESTS.submit();
+		}
+		function Clicked2(action){Load(action);}
+		function Load(action)
+		{
+			document.QUESTS.QUEST.value="";
+			document.QUESTS.FUNCTION.value="";
+			document.QUESTS.action=action;
+			document.QUESTS.submit();
+		}
+	//-->
+	</script>
+</head>
+<body BGCOLOR=BLACK>
+	<TABLE WIDTH=100% BORDER=0>
+	<TR>
+	<TD WIDTH=33% ALIGN=LEFT VALIGN=TOP></TD>
+	<TD WIDTH=33% ALIGN=CENTER VALIGN=TOP><IMG SRC="/grinder/images/grinder.gif" WIDTH=78 HEIGHT=122 ALT="" BORDER="0"></TD>
+	<TD WIDTH=33% ALIGN=RIGHT VALIGN=TOP>
+		<TABLE WIDTH=50% BORDER=1>
+		<TR><TD BGCOLOR=WHITE ALIGN=CENTER><FONT COLOR=BLACK SIZE=-1><B>Menu</B></FONT></TD></TR>
+		<TR><TD><a href="javascript:Load('/grinder/loggedin.cmvp');"><FONT COLOR=WHITE SIZE=-1><B>MUDGrinder Menu</B></FONT></A></TD></TR>
+		<TR><TD><a href="javascript:QuestWizard();"><FONT COLOR=WHITE SIZE=-1><B>Quest Maker Wizard</B></FONT></A></TD></TR>
+		<TR><TD><a href="javascript:Quest('');"><FONT COLOR=WHITE SIZE=-1><B>New Quest Script</B></FONT></A></TD></TR>
+		<TR><TD><A HREF="javascript:Browse('/resources/quests/');"><FONT COLOR=WHITE SIZE=-1><B>Browse Quest Scripts</B></FONT></a></TD></TR>
+		<TR><TD><a href="javascript:Refresh();"><FONT COLOR=WHITE SIZE=-1><B>Refresh</B></FONT></A></TD></TR>
+		</TABLE>
+	</TD>
+	</TR>
+	</TABLE>
+<CENTER>
+<FORM NAME=QUESTS TARGET=_top METHOD=POST ACTION="quests.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=QUEST VALUE="">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="">
+	@if?!CheckReqParm?QUEST=@
+		@if?CheckReqParm?FUNCTION=START@
+			<FONT COLOR=RED><B>@QuestMgr?START@</B></FONT><P>
+		@endif@
+		@if?CheckReqParm?FUNCTION=STOP@
+			<FONT COLOR=RED><B>@QuestMgr?STOP@</B></FONT><P>
+		@endif@
+		@if?CheckReqParm?FUNCTION=DELETE@
+			<FONT COLOR=RED><B>@QuestMgr?DELETE@</B></FONT><P>
+		@endif@
+        @if?CheckReqParm?FUNCTION=DISABLE@
+            <FONT COLOR=RED><B>@QuestMgr?DISABLE@</B></FONT><P>
+        @endif@
+        @if?CheckReqParm?FUNCTION=ENABLE@
+            <FONT COLOR=RED><B>@QuestMgr?ENABLE@</B></FONT><P>
+        @endif@
+	@endif@
+	<TABLE WIDTH=100% BORDER=1>
+	<TR><TD WIDTH=100% COLSPAN=6 BGCOLOR=WHITE ALIGN=CENTER><FONT COLOR=BLACK><H2>CoffeeMud @MudServerVersion@ Quests Manager</H2></FONT></TD></TR>
+	<TR>
+	<TD WIDTH=35%><B><FONT COLOR=YELLOW>Name</FONT></B></TD>
+	<TD WIDTH=35%><B><FONT COLOR=YELLOW>Status</FONT></B></TD>
+	<TD WIDTH=30%><B><FONT COLOR=YELLOW>Control</FONT></B></TD>
+	</TD>
+	</TR>
+	@QuestNext?RESET@
+	@loop@
+	<TR>
+	@QuestNext@
+	<TD><a href="javascript:Quest('@QuestData?NAME@')"><FONT COLOR=WHITE><B>@QuestData?NAME@</B></FONT></a></TD>
+	<TD><FONT COLOR=WHITE>
+    @if?QuestData?SUSPENDED@
+        Disabled
+        @if?QuestData?RUNNING@
+            (Still running --@QuestData?REMAININGLEFT@ remaining)
+        @endif@
+    @else@
+        @if?QuestData?RUNNING@
+            Running (@QuestData?REMAININGLEFT@ remaining)
+        @else@
+            @if?QuestData?WAITING@
+                Waiting (@QuestData?WAITMINSLEFT@ left)
+            @else@
+                Loaded
+            @endif@
+        @endif@
+    @endif@
+	</FONT>
+	</TD>
+	<TD>
+    @if?QuestData?SUSPENDED@
+        <INPUT TYPE=BUTTON NAME=Enable VALUE=Enable ONCLICK="Clicked('@QuestData?ID@','ENABLE');">
+    @else@
+        @if?QuestData?RUNNING@
+            <INPUT TYPE=BUTTON NAME=Stop VALUE=Stop ONCLICK="Clicked('@QuestData?ID@','STOP');">
+        @else@
+            <INPUT TYPE=BUTTON NAME=Start VALUE=Start ONCLICK="Clicked('@QuestData?ID@','START');">
+        @endif@
+        <INPUT TYPE=BUTTON NAME=Disable VALUE=Disable ONCLICK="Clicked('@QuestData?ID@','DISABLE');">
+    @endif@
+	<INPUT TYPE=BUTTON NAME=Delete VALUE=Delete ONCLICK="Clicked('@QuestData?ID@','DELETE');">
+	</TD>
+	</TR>
+	@back@
+	</TABLE>
+	<P>
+	<TABLE WIDTH=100% BORDER=0>
+	<TR>
+	<TD WIDTH=33% ALIGN=CENTER>
+	<INPUT TYPE=BUTTON NAME=Create VALUE="New Quest" ONCLICK="Quest('');">
+	</TD>
+	<TD WIDTH=33% ALIGN=CENTER><BR></TD>
+	<TD WIDTH=33% ALIGN=CENTER>
+	<INPUT TYPE=BUTTON NAME=REFRESH VALUE="Refresh" ONCLICK="Refresh();">
+	</TD>
+	</TR>
+	</TABLE>
+	<CENTER>
+	</CENTER>
+</FORM>
+</BODY>
+</HTML>
+@endif@
+@endif@

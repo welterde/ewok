@@ -1,0 +1,14 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+<meta name="robots" content="noindex,nofollow">
+<TITLE>Help On: @RequestParameter?HELPTOPIC@</TITLE>
+</HEAD>
+<BODY BGCOLOR=#000066 TEXT=#FFFFFF>
+<H3>@RequestParameter?HELPTOPIC@</H3>
+<PRE>
+@INIValue?MASK=@@RequestParameter?HELPTOPIC@@&INIHELP@
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ <BODY> @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ <BODY> @AddFile?/grinder/nopriv.cmvp@ @else@
+
+<head>
+	<!--map2.cmvp-->
+	<!-- tell spiders to sod off -->
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>CoffeeMud MUDGrinder</title>
+	<SCRIPT LANGUAGE="JavaScript">
+	<!--
+		function RC(room)
+		{
+			Clicked('rmmenu.cmvp','',room,'');
+		}
+		function EC(dir,room)
+		{
+			Clicked('lnkxmenu.cmvp',dir,room,'');
+		}
+		function CEX(dir,room,room2)
+		{
+			Clicked('edxmenu.cmvp',dir,room,room2);
+		}
+		function Clicked(action,link,room,linksto)
+		{
+			document.SELECTAREA.OLDROOM.value=document.SELECTAREA.ROOM.value;
+			document.SELECTAREA.OLDLINK.value=document.SELECTAREA.LINK.value;
+			document.SELECTAREA.ROOM.value=room;
+			document.SELECTAREA.LINK.value=link;
+			document.SELECTAREA.LINKSTO.value=linksto;
+			document.SELECTAREA.action='/grinder/'+action;
+			document.SELECTAREA.submit();
+		}
+
+function showSelected() {
+	showDiv(document.all.layerSelect.value);
+}
+
+function showDiv(pass) { 
+  var divs = document.getElementsByTagName('div'); 
+  for(i=0;i<divs.length;i++){ 
+    if((divs[i].id.match(pass))||(divs[i].id.match('layersMenu'))){//if they are 'see' divs 
+      if (document.getElementById) // DOM3 = IE5, NS6 
+        divs[i].style.visibility="visible";// show/hide 
+      else 
+        if (document.layers) // Netscape 4 
+          document.layers[divs[i]].display = 'visible'; 
+        else // IE 4 
+          document.all.divs[i].visibility = 'visible'; 
+    } else { 
+      if (document.getElementById) 
+        divs[i].style.visibility="hidden"; 
+      else 
+        if (document.layers) // Netscape 4 
+          document.divs[i].visibility = 'hidden'; 
+        else // IE 4 
+          document.all.divs[i].visibility = 'hidden'; 
+    } 
+  } 
+} 
+
+function setVariables() {
+  if (navigator.appName == "Netscape") {
+    v=".top=";
+    w=".left=";
+    dS="document.";
+    sD="";
+    x="window.pageXOffset";
+    y="window.pageYOffset";
+  }
+  else {
+    v=".pixelTop=";
+    w=".pixelLeft=";
+    dS="";
+    sD=".style";
+    x="document.body.scrollLeft";
+    y="document.body.scrollTop";
+   }
+}
+function preloadImages() {}
+
+function checkLocation() {
+  object="layersMenu";
+  yy=eval(y);
+  xx=eval(x);
+  eval(dS+object+sD+v+yy);
+  eval(dS+object+sD+w+xx);
+  setTimeout("checkLocation()",10);
+}
+@if?AreaData?ISGRID@
+	document.onclick=cellclick
+	
+	function cellclick(e)
+	{
+		if(!e) var e=window.event;
+		var tg = (e.target) ? e.target : e.srcElement;
+		if((tg!=null)&&(tg.id!=null)&&(tg.id.length>0)&&(tg.id.substr(0,1)=='X'))
+		{
+			var x=tg.id.substr(1);
+			var ypos=x.indexOf('_');
+			if(ypos>0)
+			{
+				y=x.substr(ypos+1);
+			 	x=x.substr(0,ypos);
+				var paintMode=top.MENU.paintmenu;
+			 	if((paintMode&&window.confirm('Start painting around grid location '+x+','+y+'?'))
+			 	||(!paintMode&&window.confirm('Start editing around grid location '+x+','+y+'?')))
+			 	{
+			 		var x1=Number(x)-20;
+			 		if(x1<0) x1=0;
+			 		var y1=Number(y)-20;
+			 		if(y1<0) y1=0;
+			 		var xx=x1+40;
+			 		var yy=y1+40;
+			 		document.SELECTAREA.MAPSTYLE.value='G'+x1+'_'+y1+'_'+xx+'_'+yy+'_'+x+'_'+y;
+			 		if(paintMode) 
+				 		top.MENU.paint(document.SELECTAREA.MAPSTYLE.value);
+			 		else
+			 		{
+				 		document.SELECTAREA.target='_top';
+				 		document.SELECTAREA.action='/grinder/modarea.cmvp';
+				 		document.SELECTAREA.submit();
+			 		}
+			 	}
+		 	}
+		}
+	}
+@endif@
+	//-->
+	</SCRIPT>
+</head>
+@if?CheckReqParm?MAPSTYLE=Z@
+	@if?!CheckReqParm?MAPLEVEL=@ 
+	<BODY OnLoad="preloadImages();setVariables();checkLocation();setTimeout(showDiv('@RequestParameterEncoded?MAPLEVEL@'),1000)">
+	@else@
+	<BODY OnLoad="preloadImages();setVariables();checkLocation()">
+	@endif@
+@else@
+	<BODY>
+@endif@
+
+<FORM NAME=SELECTAREA METHOD=POST ACTION="" TARGET=MENU>
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=AREA VALUE="@AreaName@">
+<INPUT TYPE=HIDDEN NAME=MAPSTYLE VALUE="@RequestParameter?MAPSTYLE@">
+<INPUT TYPE=HIDDEN NAME=MAPLEVEL VALUE="">
+<INPUT TYPE=HIDDEN NAME=ROOM VALUE="">
+<INPUT TYPE=HIDDEN NAME=LINK VALUE="">
+<INPUT TYPE=HIDDEN NAME=LINKSTO VALUE="">
+<INPUT TYPE=HIDDEN NAME=OLDROOM VALUE="">
+<INPUT TYPE=HIDDEN NAME=OLDLINK VALUE="">
+@MUDGrinder?AREATHUMBNAIL@
+</FORM>
+
+@endif@
+@endif@
+</BODY>
+</HTML>

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<link rel="coffeemud icon" href="images/coffeemud.ico" >
+	<title>Help Files</title>
+	<SCRIPT LANGUAGE=JavaScript>
+	<!--
+	function openUp(named)
+	{
+		var strFeatures="top=200,left=50,resizeable=no,scrollbars=yes,height=400,width=650,alwaysRaised=yes,dependent=yes";
+		w=window.open("help.cmvp?HELPTOPIC="+named,
+		            "Help",strFeatures, false);
+	}
+	//-->
+	</SCRIPT>
+</head>
+
+<body>
+	@HelpTopics?reset@
+	@loop@
+		@HelpTopics?NEXTLETTER@
+		<a href="helps.cmvp?FIRSTLETTER=@RequestParameter?HELPFIRSTLETTER@">
+		@RequestParameter?HELPFIRSTLETTER@
+		</a>
+	@back@
+	<P>
+	<TABLE WIDTH=100% BORDER=1>
+	<TR><TD WIDTH=25% COLSPAN=4 BGCOLOR=#90ee90 ALIGN=CENTER><H2>CoffeeMud @MudServerVersion@ Help Topics</H2></TD></TR>
+	@HelpTopics?reset@
+	@loop@
+	<TR>
+	@HelpTopics?NEXT&SHORT@<TD WIDTH=25%><a href="javascript:openUp('@HelpTopics@');"><B>@HelpTopics@</B></a></TD>
+	@HelpTopics?NEXT&SHORT&EMPTYOK@<TD WIDTH=25%><a href="javascript:openUp('@HelpTopics@');"><B>@HelpTopics@</B></a></TD>
+	@HelpTopics?NEXT&SHORT&EMPTYOK@<TD WIDTH=25%><a href="javascript:openUp('@HelpTopics@');"><B>@HelpTopics@</B></a></TD>
+	@HelpTopics?NEXT&SHORT&EMPTYOK@<TD WIDTH=25%><a href="javascript:openUp('@HelpTopics@');"><B>@HelpTopics@</B></a></TD>
+	</TR>
+	@back@
+	</TABLE>
+<P><CENTER><A href="index.cmvp">Back to the Main page</a></CENTER>
+</BODY>
+</HTML>

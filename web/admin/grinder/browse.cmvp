@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYFILEBROWSE=true&SYSOP=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+
+<html>
+<head>
+	<title>Browsing: @RequestParameter?PATH@</title>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<script language=JavaScript>
+	<!--
+		function OpenFile(action)
+		{
+			var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=750,alwaysRaised=yes,dependent=yes";
+			w=window.open("browsefile.cmvp?"+action,"Filer",strFeatures, false);
+		}
+		function NewDir(named)
+		{
+			var path=document.BROWSE.PATH.value;
+			if((path.length>0)&&(path.lastIndexOf('/')!=path.length-1))
+				path=path+'/';
+			document.BROWSE.PATH.value=path+named+"/";
+			document.BROWSE.submit();
+		}
+		function CreateDir()
+		{
+			var named=prompt('Enter new directory name:','');
+			if((named=='')||(named==null)) return;
+			document.BROWSE.FUNCTION.value="NEWDIR";
+			var path=document.BROWSE.PATH.value;
+			if((path.length>0)&&(path.lastIndexOf('/')!=path.length-1))
+				path=path+'/';
+			document.BROWSE.PATH.value=path+named+"/";
+			document.BROWSE.submit();
+		}
+		function DeleteDir()
+		{
+			document.BROWSE.FUNCTION.value="DELDIR";
+			var path=document.BROWSE.PATH.value;
+			if((path.length>0)&&(path.lastIndexOf('/')!=path.length-1))
+				path=path+'/';
+			document.BROWSE.PATH.value=path;
+			document.BROWSE.submit();
+		}
+		function NewFile(action)
+		{
+			OpenFile(action);
+		}
+		function BackDir()
+		{
+			var l=document.BROWSE.PATH.value.length;
+			if(l>1)
+			{
+				var x=document.BROWSE.PATH.value.substring(0,l-1).lastIndexOf('/');
+				if(x>=0)
+					document.BROWSE.PATH.value=document.BROWSE.PATH.value.substring(0,x+1);
+				else
+					return;
+			}
+			document.BROWSE.submit();			
+		}
+		function DownloadFile(action)
+		{
+			document.location.href='/FileData?'+action;
+		}
+		function RefreshDir()
+		{
+			document.BROWSE.FUNCTION.value='';
+			document.BROWSE.FILE.value='';
+			document.BROWSE.submit();
+		}
+		function DeleteFile(action)
+		{
+			if(confirm('Delete file '+action+'?'))
+			{
+				document.BROWSE.FUNCTION.value='DELETE';
+				document.BROWSE.FILE.value=action;
+				document.BROWSE.submit();
+			}
+		}
+	//-->
+	</script>
+</head>
+<body BGCOLOR=BLACK>
+<FORM NAME=BROWSE TARGET=_top METHOD=POST ACTION="browse.cmvp">
+@if?CheckReqParm?FUNCTION=DELDIR@<FONT COLOR=RED>@FileMgr?DELETEDIR@</FONT><BR>@endif@
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=PATH VALUE="@RequestParameter?PATH@">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="">
+<INPUT TYPE=HIDDEN NAME=FILE VALUE="">
+@if?CheckReqParm?FUNCTION=DELETE@<FONT COLOR=RED>@FileMgr?DELETE@</FONT><BR>@endif@
+@if?CheckReqParm?FUNCTION=NEWDIR@<FONT COLOR=RED>@FileMgr?CREATEDIR@</FONT><BR>@endif@
+@if?CheckReqParm?FUNCTION=UPLOAD@<FONT COLOR=RED>@FileMgr?UPLOAD@</FONT><BR>@endif@
+@if?CheckReqParm?FUNCTION=SEARCH@<FONT COLOR=RED>@FileMgr?SEARCH&STR=@@RequestParameter?SEARCHSTR@@ @</FONT><BR>@endif@
+@if?CheckReqParm?FUNCTION=NAMESEARCH@<FONT COLOR=RED>@FileMgr?NAMESEARCH&STR=@@RequestParameter?SEARCHSTR@@ @</FONT><BR>@endif@
+<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0>
+<TR><TD ALIGN=LEFT WIDTH=75%>
+<a href="javascript:BackDir()"><FONT COLOR=YELLOW>..</FONT><IMG BORDER=0 SRC=images/folder_up.gif alt="Back" title="Back"></a>
+</TD><TD WIDTH=5%>
+<a href="javascript:RefreshDir();"><IMG BORDER=0 SRC=images/folder_refresh.gif alt="Refresh directory" title="Refresh directory"></a>
+</TD><TD COLSPAN=2 ALIGN=RIGHT>
+<a href="javascript:CreateDir();"><IMG BORDER=0 SRC=images/folder_add.gif alt="Add a new directory" title="Add a new directory"></a>
+</TD><TD>
+<a href="javascript:DeleteDir();"><IMG BORDER=0 SRC=images/folder_delete.gif alt="Delete this directory" title="Delete this directory"></a>
+</TD></TR>
+@FileNext?RESET@
+@loop@
+@FileNext@
+	@if?FileInfo?ISDIRECTORY@
+		<TR><TD COLSPAN=6>
+		<a href="javascript:NewDir('@RequestParameter?FILE@')"  style="text-decoration:none">
+		@if?FileInfo?ISVFS@<I>@endif@ 	@if?FileInfo?ISBOTH@<B>@endif@
+		<FONT COLOR=YELLOW>@RequestParameter?FILE@</FONT>
+		@if?FileInfo?ISVFS@</I>@endif@ 	@if?FileInfo?ISBOTH@</B>@endif@
+		</a>
+		</TD></TR>
+	@endif@
+@back@
+@FileNext?RESET@
+@loop@
+@FileNext@
+	@if?!FileInfo?ISDIRECTORY@ @if?FileInfo?ISFILE@
+		<TR><TD COLSPAN=2>
+		@if?FileInfo?ISVFS@<I>@endif@ 	@if?FileInfo?ISBOTH@<B>@endif@
+		<FONT COLOR=WHITE>@RequestParameter?FILE@</FONT>
+		@if?FileInfo?ISVFS@</I>@endif@ 	@if?FileInfo?ISBOTH@</B>@endif@
+		</TD><TD>
+		<a href="javascript:OpenFile('@RequestParametersEncoded@')"><IMG BORDER=0 SRC=images/edit.gif alt="Edit" title="Edit"></a>
+		</TD><TD>
+		<a href="javascript:DownloadFile('@RequestParametersEncoded@')"><IMG BORDER=0 SRC=images/download.gif alt="Download" title="Download"></a>
+		</TD><TD>
+		<a href="javascript:DeleteFile('@RequestParameter?FILE@')"><IMG BORDER=0 SRC=images/delete.gif alt="Delete" title="Delete"></a>
+		</TD></TR>
+	@endif@ @endif@
+@back@
+</TABLE>
+<a href="javascript:NewFile('@RequestParametersEncoded@');"><IMG BORDER=0 SRC=images/document_new.gif alt="Create New File" title="Create New File"><FONT COLOR=AQUA>*new file*</FONT></a><BR>
+</FORM>
+<HR>
+<FORM NAME=UPLOADNAMESEARCH TARGET=_top ENCTYPE="multipart/form-data" ACTION=/grinder/browse.cmvp METHOD=POST>
+<FONT COLOR=CYAN>*search for filenames (reg. exp.)*</FONT>
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=PATH VALUE="@RequestParameter?PATH@">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="NAMESEARCH">
+<INPUT TYPE=TEXT NAME=SEARCHSTR VALUE="" SIZE=30><BR>
+<INPUT TYPE=SUBMIT NAME=SUBMIT VALUE=SUBMIT>
+</FORM>
+<HR>
+<FORM NAME=UPLOADSEARCH TARGET=_top ENCTYPE="multipart/form-data" ACTION=/grinder/browse.cmvp METHOD=POST>
+<FONT COLOR=CYAN>*search inside files (reg. exp.)*</FONT>
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=PATH VALUE="@RequestParameter?PATH@">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="SEARCH">
+<INPUT TYPE=TEXT NAME=SEARCHSTR VALUE="" SIZE=30><BR>
+<INPUT TYPE=SUBMIT NAME=SUBMIT VALUE=SUBMIT>
+</FORM>
+<HR>
+<FORM NAME=UPLOADUPLOAD TARGET=_top ENCTYPE="multipart/form-data" ACTION=/grinder/browse.cmvp METHOD=POST>
+<FONT COLOR=CYAN>*upload a file*</FONT>
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=PATH VALUE="@RequestParameter?PATH@">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="UPLOAD">
+<INPUT TYPE=FILE NAME=FILE><BR>
+<INPUT TYPE=SUBMIT NAME=SUBMIT VALUE=SUBMIT>
+</FORM>
+</BODY>
+</HTML>
+@endif@
+@endif@

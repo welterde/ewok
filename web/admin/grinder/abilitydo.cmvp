@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_CMDABILITIES=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+    <link rel="grinder icon" href="/images/grinder.ico" >
+</head>
+<body BGCOLOR=BLACK>
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+@if?CheckReqParm?FUNCTION=DELABILITY@
+    var v='@MUDGrinder?DELABILITY@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Ability created/modified.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=EDITABILITY@
+    var v='@MUDGrinder?EDITABILITY@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Ability created/modified.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=REABILITY@
+    @if?CheckReqParm?NEWABILITYID=@
+        document.location.href='ability.cmvp?AUTH=@Authenticate?AUTH@&ABILITY=@AbilityID@';
+    @else@
+        document.location.href='ability.cmvp?AUTH=@Authenticate?AUTH@&ABILITY=@RequestParameterEncoded?NEWABILITYID@&NEWABILITY=@RequestParameterEncoded?NEWABILITYID@';
+    @endif@
+@endif@
+//-->
+</SCRIPT>
+
+</BODY>
+</HTML>
+@endif@
+@endif@

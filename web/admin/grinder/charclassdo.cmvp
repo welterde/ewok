@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_CMDCLASSES=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+    <link rel="grinder icon" href="/images/grinder.ico" >
+</head>
+<body BGCOLOR=BLACK>
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+@if?CheckReqParm?FUNCTION=DELCLASS@
+    var v='@MUDGrinder?DELCLASS@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Class deleted.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=EDITCLASS@
+    var v='@MUDGrinder?EDITCLASS@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Class created/modified.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=RECLASS@
+    @if?CheckReqParm?NEWCLASSID=@
+        document.location.href='charclass.cmvp?AUTH=@Authenticate?AUTH@&CLASS=@CharClassID@';
+    @else@
+        document.location.href='charclass.cmvp?AUTH=@Authenticate?AUTH@&CLASS=@RequestParameterEncoded?NEWCLASSID@&NEWCLASS=@RequestParameterEncoded?NEWCLASSID@';
+    @endif@
+@endif@
+//-->
+</SCRIPT>
+
+</BODY>
+</HTML>
+@endif@
+@endif@

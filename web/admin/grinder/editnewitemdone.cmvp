@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+@if?CheckReqParm?DELITEM=@
+    @MUDGrinder?EDITITEM@
+@endif@
+<HTML>
+<head>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+</head>
+@if?CheckReqParm?<ITEM=CATALOG-@
+    <SCRIPT LANGUAGE=JavaScript>
+    <!--
+        @if?!CheckReqParm?DELITEM=@
+            var v='@MUDGrinder?DELCATALOGITEM@';
+            if(v.length>0)
+                alert(v);
+        @endif@
+        opener.EditItemDone();
+        window.close();
+    //-->
+    </SCRIPT>
+@else@
+@if?CheckReqParm?<ITEM=NEWCATA-@
+    <SCRIPT LANGUAGE=JavaScript>
+    <!--
+        opener.EditItemDone();
+        window.close();
+    //-->
+    </SCRIPT>
+@else@
+@if?CheckReqParm?MOB=@
+	<SCRIPT LANGUAGE=JavaScript>
+	<!--
+	    var responsefield = '@RequestParameter?RESPONSEFIELD@';
+        var replacefield = '@RequestParameter?REPLACEFIELD@';
+	    if(responsefield != '') 
+	    {
+	       var newitemid = '@RequestParameter?ITEM@'; 
+	       var responsecommand = 'opener.document.' + responsefield + '.value = "' + replacefield + '=' + newitemid +'"';
+	       eval(responsecommand);
+	    }
+		opener.EditItemDone();
+		window.close();
+	//-->
+	</SCRIPT>
+@else@
+	@AddRequestParameter?ROOM=ANY@
+	@AddFile?/grinder/editmobform.cmvp@
+@endif@
+@endif@
+@endif@
+	</HTML>
+@endif@
+@endif@

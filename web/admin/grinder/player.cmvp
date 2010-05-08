@@ -1,0 +1,796 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_STAT=true&AUTH_CMDPLAYERS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<html>
+<head>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>Player Information</title>
+	<script language=JavaScript>
+	<!--
+		function openUp2(named)
+		{
+			var strFeatures="top=200,left=50,resizeable=no,scrollbars=yes,height=400,width=650,alwaysRaised=yes,dependent=yes";
+			w=window.open("/property.cmvp?ABILITY="+named,
+			            "Ability",strFeatures, false);
+		}
+		function Delete()
+		{
+			if(confirm('Delete this user?! Confirm!'))
+			{
+				if(confirm('Press OK to Delete this user!'))
+				{
+					document.RESOURCES.action='playerdo.cmvp';
+					document.RESOURCES.FUNCTION.value='DELETE';
+					document.RESOURCES.PLAYER.value='@PlayerID@';
+					document.RESOURCES.submit();
+				}
+			}
+		}
+		function Edit()
+		{
+			document.RESOURCES.action='player.cmvp';
+			document.RESOURCES.FUNCTION.value='EDIT';
+			document.RESOURCES.ACTION.value='FIRSTTIME';
+			document.RESOURCES.PLAYER.value='@PlayerID@';
+			document.RESOURCES.submit();
+		}
+		function EditDone()
+		{
+			if(confirm('Submit your changes to this player?'))
+			{
+				document.RESOURCES.action='playerdo.cmvp';
+				document.RESOURCES.FUNCTION.value='EDITPLAYER';
+				document.RESOURCES.ACTION.value='';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.submit();
+			}
+		}
+		function Boot()
+		{
+			if(confirm('Boot this user off the system?'))
+			{
+				document.RESOURCES.action='playerdo.cmvp';
+				document.RESOURCES.FUNCTION.value='BOOT';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.submit();
+			}
+		}
+		function BanIP()
+		{
+			if(confirm('Ban this IP Address?'))
+			{
+				document.RESOURCES.action='playerdo.cmvp';
+				document.RESOURCES.FUNCTION.value='BANBYIP';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.submit();
+			}
+		}
+		function DelImg()
+		{
+			if(confirm('Delete this players image?'))
+			{
+				document.RESOURCES.action='playerdo.cmvp';
+				document.RESOURCES.FUNCTION.value='DELIMG';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.submit();
+			}
+		}
+		function Ban()
+		{
+			if(confirm('Ban this Player?'))
+			{
+				document.RESOURCES.action='playerdo.cmvp';
+				document.RESOURCES.FUNCTION.value='BANBYNAME';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.submit();
+			}
+		}
+		function BanEmail()
+		{
+			if(confirm('Ban this Email Address?'))
+			{
+				document.RESOURCES.action='playerdo.cmvp';
+				document.RESOURCES.FUNCTION.value='BANBYEMAIL';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.submit();
+			}
+		}
+		function AddNewItem()
+		{
+			if(confirm('Submit your changes to this player and add a new item?'))
+			{
+				document.RESOURCES.FUNCTION.value='EDITPLAYER';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.ITEM.value='NEW';
+				document.RESOURCES.action='addplayeritem.cmvp';
+				document.RESOURCES.submit();
+			}
+		}
+		function AddItem(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function DelItem(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function EditItem(ME)
+		{
+			if(confirm('Submit your changes to this player and edit this item?'))
+			{
+				document.RESOURCES.FUNCTION.value='EDITPLAYER';
+				document.RESOURCES.PLAYER.value='@PlayerID@';
+				document.RESOURCES.ITEM.value=ME;
+				document.RESOURCES.action='editplayeritem.cmvp';
+				document.RESOURCES.submit();
+			}
+		}
+		function EditBehavior(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddBehavior(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function EditFaction(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddFaction(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function EditAffect(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddAffect(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function ReShow()
+		{
+			document.RESOURCES.FUNCTION.value='EDIT';
+			document.RESOURCES.PLAYER.value='@PlayerID@';
+			document.RESOURCES.action='/grinder/player.cmvp';
+			document.RESOURCES.submit();
+		}
+		function Cancel()
+		{
+			document.location.href='player.cmvp?AUTH=@Authenticate?AUTH@&PLAYER=@PlayerID@';
+		}
+	//-->
+	</script>
+</head>
+<body BGCOLOR=BLACK>
+<FORM NAME=RESOURCES TARGET=_top METHOD=POST ACTION="player.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=PLAYER VALUE="">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="">
+<INPUT TYPE=HIDDEN NAME=ITEM VALUE="">
+<INPUT TYPE=HIDDEN NAME=ACTION VALUE="">
+@if?!CheckReqParm?FUNCTION=EDIT@
+	<TABLE WIDTH=100% BORDER=0>
+	<TR>
+	<TD WIDTH=20% ALIGN=CENTER>
+	@if?CheckAuthCode?AUTH_CMDPLAYERS=true@
+		<INPUT TYPE=BUTTON NAME=DELETE VALUE="Delete" ONCLICK="Delete();">
+	@endif@
+	</TD>
+	<TD WIDTH=20% ALIGN=CENTER>
+	@if?PlayerOnline?=true@ 
+		@if?CheckAuthCode?AUTH_BOOT=true@
+			<INPUT TYPE=BUTTON NAME=BOOT VALUE="Boot Player" ONCLICK="Boot();">
+		@endif@ 
+	@endif@
+	@if?CheckAuthCode?AUTH_CMDPLAYERS=true@
+		<INPUT TYPE=BUTTON NAME=EDIT VALUE="Edit" ONCLICK="Edit();">
+	@endif@
+	</TD>
+	<TD WIDTH=20% ALIGN=CENTER>
+	@if?CheckAuthCode?AUTH_BAN=true@
+		<INPUT TYPE=BUTTON NAME=BOOT VALUE="Ban Player" ONCLICK="Ban();">
+	@endif@
+	</TD>
+	<TD WIDTH=20% ALIGN=CENTER>
+	@if?CheckAuthCode?AUTH_BAN=true@
+		<INPUT TYPE=BUTTON NAME=BOOT VALUE="Ban IP Address" ONCLICK="BanIP();">
+	@endif@
+	</TD>
+	<TD WIDTH=20% ALIGN=CENTER>
+	<INPUT TYPE=BUTTON NAME=BACK VALUE="Close" ONCLICK="javascript:window.close();">
+	</TD>
+	</TR>
+	</TABLE>
+@endif@
+@if?PlayerData?ACCTEXPUSED@
+	<CENTER><FONT COLOR=RED>Account expires: </FONT>
+	@if?!CheckReqParm?FUNCTION=EDIT@
+		<INPUT TYPE=TEXT NAME=ACCTEXP SIZE=20 VALUE="@PlayerData?ACCTEXP@">
+	@else@
+		<FONT COLOR=BLACK>@PlayerData?ACCTEXP@</FONT>
+	@endif@
+</CENTER>
+@endif@
+<TABLE WIDTH=100% BORDER=1 CELLSPACING=0 CELLPADDING=0>
+<TR>
+	<TD WIDTH=25%>
+		<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+		<TR>
+			<TD WIDTH=33%>
+				<FONT COLOR=YELLOW>Name: </FONT>
+			</TD>
+			<TD WIDTH=66%>
+				<FONT COLOR=WHITE><B>@PlayerData?NAME@</B></FONT>@if?PlayerOnline?=true@<FONT COLOR=YELLOW>&nbsp;&nbsp;&nbsp; *ONLINE*</FONT>@endif@
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD WIDTH=55%><FONT COLOR=YELLOW>Race: </FONT>
+		@if?CheckReqParm?FUNCTION=EDIT@
+		    <SELECT NAME=BASEGENDER>
+		    @PlayerData?BASEGENDER@
+		    </SELECT>
+		@else@
+			<FONT COLOR=WHITE>@PlayerData?GENDERNAME@</FONT>
+		@endif@
+		@if?CheckReqParm?FUNCTION=EDIT@
+		    <SELECT NAME=RACE>
+		    @PlayerData?RACE@
+		    </SELECT>
+		@else@
+			&nbsp;<FONT COLOR=WHITE>@PlayerData?RACENAME@</FONT>
+		@endif@
+	</TD>
+	<TD WIDTH=20% VALIGN=CENTER ALIGN=CENTER ROWSPAN=3>
+	@if?PlayerData?HASIMG@
+		<IMG HEIGHT=70 WIDTH=70 SRC="@PlayerData?IMGURL@">
+		<A HREF="javascript:DelImg();"><FONT COLOR=RED>(X)</FONT></A>
+	@endif@
+	</TD>
+</TR>
+<TR>
+	@if?IsAccountSystem@
+	<TD WIDTH=25%>
+		<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+		<TR>
+			<TD WIDTH=33%><FONT COLOR=YELLOW>Account: </FONT></TD>
+			<TD WIDTH=66%>
+				@if?CheckReqParm?FUNCTION=EDIT@
+					<INPUT TYPE=TEXT NAME=ACCOUNT SIZE=10 MAXLENGTH=50 VALUE="@PlayerData?ACCOUNT@">
+				@else@
+					&nbsp;<FONT COLOR=WHITE><B>@PlayerData?ACCOUNT@</B></FONT>
+				@endif@
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD WIDTH=55%><FONT COLOR=YELLOW>Description: </FONT>
+		@if?CheckReqParm?FUNCTION=EDIT@
+			<INPUT TYPE=TEXT NAME=DESCRIPTION SIZE=30 MAXLENGTH=255 VALUE="@PlayerData?DESCRIPTION@">
+		@else@
+			<FONT COLOR=WHITE><B>@PlayerData?DESCRIPTION@</B></FONT>
+		@endif@
+	@else@
+	<TD WIDTH=80% COLSPAN=2>
+		<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+		<TR>
+			<TD WIDTH=20%><FONT COLOR=YELLOW>Description: </FONT></TD>
+			<TD WIDTH=80%>
+				@if?CheckReqParm?FUNCTION=EDIT@
+					<INPUT TYPE=TEXT NAME=DESCRIPTION SIZE=60 MAXLENGTH=255 VALUE="@PlayerData?DESCRIPTION@">
+				@else@
+					<FONT COLOR=WHITE><B>@PlayerData?DESCRIPTION@</B></FONT>
+				@endif@
+			</TD>
+		</TR>
+		</TABLE>
+	@endif@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=80% COLSPAN=2>
+		<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+		<TR>
+			<TD WIDTH=20%><FONT COLOR=YELLOW>Level: </FONT>&nbsp;&nbsp;<FONT COLOR=WHITE>@PlayerData?LEVEL@</FONT></TD>
+			<TD WIDTH=80%><FONT COLOR=YELLOW>Classes: </FONT>
+				@if?CheckReqParm?FUNCTION=EDIT@
+					<FONT COLOR=WHITE>@PlayerData?CLASSLIST@</FONT>
+				@else@
+					<FONT COLOR=WHITE>@PlayerData?CLASSES@</FONT>
+				@endif@
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+</TR>
+<TR>
+	<TD COLSPAN=3>
+	<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Hit Points: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEHITPOINTS SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?BASEHITPOINTS@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?HITPOINTS@</FONT><FONT COLOR=YELLOW>/</FONT><FONT COLOR=WHITE>@PlayerData?BASEHITPOINTS@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=20% ALIGN=RIGHT><FONT COLOR=YELLOW>Stats:&nbsp;&nbsp;&nbsp;</FONT></TD>
+		<TD WIDTH=7% ALIGN=LEFT><FONT COLOR=YELLOW>Str</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASESTRENGTH SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASESTRENGTH@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?STRENGTH@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7% ALIGN=LEFT><FONT COLOR=YELLOW>Int</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEINTELLIGENCE SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEINTELLIGENCE@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?INTELLIGENCE@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7% ALIGN=LEFT><FONT COLOR=YELLOW>Dex</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEDEXTERITY SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEDEXTERITY@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?DEXTERITY@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Mana: </FONT></TD>
+		<TD WIDTH=40% COLSPAN=2>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEMANA SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?BASEMANA@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?MANA@</FONT><FONT COLOR=YELLOW>/</FONT><FONT COLOR=WHITE>@PlayerData?BASEMANA@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7% ALIGN=LEFT><FONT COLOR=YELLOW>Wis</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEWISDOM SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEWISDOM@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?WISDOM@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7% ALIGN=LEFT><FONT COLOR=YELLOW>Con</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASECONSTITUTION SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASECONSTITUTION@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?CONSTITUTION@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7% ALIGN=LEFT><FONT COLOR=YELLOW>Chr</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASECHARISMA SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASECHARISMA@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?CHARISMA@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Movement: </FONT></TD>
+		<TD WIDTH=80% COLSPAN=8>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEMOVEMENT SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?BASEMOVEMENT@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?MOVEMENT@</FONT><FONT COLOR=YELLOW>/</FONT><FONT COLOR=WHITE>@PlayerData?BASEMOVEMENT@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Alignment: </FONT></TD>
+		<TD WIDTH=80% COLSPAN=8>
+			<FONT COLOR=WHITE>@PlayerData?ALIGNMENTSTRING@ (@PlayerData?ALIGNMENTNAME@)</FONT>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<FONT SIZE=-2 COLOR=YELLOW>* See Factions</FONT>
+			@endif@
+		</TD>
+	</TR>
+	</TABLE>
+	</TD>
+</TR>
+<TR>
+	<TD COLSPAN=3>
+	<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Height: </FONT></TD>
+		<TD WIDTH=40%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=HEIGHT SIZE=4 MAXLENGTH=4 VALUE="@PlayerData?HEIGHT@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?HEIGHT@</FONT> 
+			@endif@
+			<FONT COLOR=YELLOW>inches tall</FONT></TD>
+		<TD WIDTH=40% COLSPAN=2><FONT COLOR=YELLOW>Riding: </FONT> <FONT COLOR=WHITE>@PlayerData?RIDING@</FONT></TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Weight: </FONT></TD>
+		<TD WIDTH=40%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=WEIGHT SIZE=4 MAXLENGTH=4 VALUE="@PlayerData?WEIGHT@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?WEIGHT@</FONT> 
+			@endif@
+			<FONT COLOR=YELLOW>pounds</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Practice Sessions: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=PRACTICES SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?PRACTICES@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?PRACTICES@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Carrying: </FONT></TD>
+		<TD WIDTH=40%><FONT COLOR=WHITE>@PlayerData?ENCUMBRANCE@</FONT><FONT COLOR=YELLOW>/</FONT><FONT COLOR=WHITE>@PlayerData?MAXCARRY@</FONT><FONT COLOR=YELLOW> pounds</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Training Sessions: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=TRAINS SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?TRAINS@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?TRAINS@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Age: </FONT></TD>
+		<TD WIDTH=40%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=HOURS SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?HOURS@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?HOURS@</FONT>
+			@endif@
+			<FONT COLOR=YELLOW> hours online</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Total Experience: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=EXPERIENCE SIZE=10 MAXLENGTH=10 VALUE="@PlayerData?EXPERIENCE@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?EXPERIENCE@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Gold: </FONT></TD>
+		<TD WIDTH=40%><FONT COLOR=WHITE>@PlayerData?MONEY@</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Exp. To Level: </FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=WHITE>@PlayerData?EXPERIENCELEVEL@</FONT></TD>
+	</TR>
+	</TABLE>
+	</TD>
+</TR>
+<TR>
+	<TD COLSPAN=3>
+	<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Combat Info: </FONT></TD>
+		<TD WIDTH=20%><BR></TD>
+		<TD WIDTH=20% ALIGN=RIGHT><FONT COLOR=YELLOW>Save Vs:&nbsp;&nbsp;&nbsp;</FONT></TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Fire</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEFIRE SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEFIRE@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?FIRE@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Cold</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASECOLD SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASECOLD@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?COLD@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Water</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEWATER SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEWATER@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?WATER@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Attack: </FONT></TD>
+		<TD WIDTH=40% COLSPAN=2>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=ATTACK SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?ATTACK@">
+				<FONT COLOR=YELLOW><B>&nbsp;X&nbsp;</B></FONT>
+				<INPUT TYPE=TEXT NAME=SPEED SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?SPEED@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?ATTACKNAME@</FONT>
+				<FONT COLOR=YELLOW><B>&nbsp;X&nbsp;</B></FONT>
+				<FONT COLOR=WHITE>@PlayerData?SPEEDNAME@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Para</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEPARALYSIS SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEPARALYSIS@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?PARALYSIS@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Dise</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEDISEASE SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEDISEASE@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?DISEASE@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Magic</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEMAGIC SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEMAGIC@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?MAGIC@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Damage: </FONT></TD>
+		<TD WIDTH=40% COLSPAN=2>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=DAMAGE SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?DAMAGE@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?DAMAGENAME@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Pois</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEPOISON SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEPOISON@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?POISON@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Acid</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEACID SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEACID@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?ACID@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Gas</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEGAS SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEGAS@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?GAS@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Defence: </FONT></TD>
+		<TD WIDTH=40% COLSPAN=2>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=ARMOR SIZE=5 MAXLENGTH=5 VALUE="@PlayerData?ARMOR@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?ARMORNAME@</FONT>
+			@endif@
+			<FONT COLOR=YELLOW>/ Wimpy: </FONT><FONT COLOR=WHITE>@PlayerData?WIMP@</FONT>
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Dead</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEUNDEAD SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEUNDEAD@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?UNDEAD@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Elec</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEELECTRICITY SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEELECTRICITY@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?ELECTRICITY@</FONT>
+			@endif@
+		</TD>
+		<TD WIDTH=7%><FONT COLOR=YELLOW>Mind</FONT></TD>
+		<TD WIDTH=7%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=BASEMIND SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?BASEMIND@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?MIND@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	</TABLE>
+	</TD>
+</TR>
+<TR>
+	<TD COLSPAN=3>
+	<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Location: </FONT></TD>
+		<TD WIDTH=40%><FONT COLOR=WHITE>@PlayerData?LOCATION@</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Liege: </FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=WHITE>@PlayerData?LIEGE@</FONT></TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Start Room: </FONT></TD>
+		<TD WIDTH=40%><FONT COLOR=WHITE>@PlayerData?STARTROOM@</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Clan: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+			    <SELECT NAME=CLAN>
+			    @PlayerData?CLAN@
+			    </SELECT>
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?CLANNAME@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Email: </FONT></TD>
+		<TD WIDTH=40%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=EMAIL SIZE=30 MAXLENGTH=30 VALUE="@PlayerData?EMAIL@">
+			<!--this comment is here because email addresses contain at-signs, and we mussn't confuse the macro parser-->
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?EMAIL@</FONT>
+			<!--this comment is here because email addresses contain at-signs, and we mussn't confuse the macro parser-->
+			@endif@
+		</TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Deity: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+			    <SELECT NAME=DEITY>
+			    @PlayerData?DEITY@
+			    </SELECT>
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?DEITYNAME@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>LastIP: </FONT></TD>
+		<TD WIDTH=40%><FONT COLOR=WHITE>@PlayerData?LASTIP@</FONT></TD>
+		<TD WIDTH=20%><FONT COLOR=YELLOW>Quest Points: </FONT></TD>
+		<TD WIDTH=20%>
+			@if?CheckReqParm?FUNCTION=EDIT@
+				<INPUT TYPE=TEXT NAME=QUESTPOINTS SIZE=3 MAXLENGTH=3 VALUE="@PlayerData?QUESTPOINTS@">
+			@else@
+				<FONT COLOR=WHITE>@PlayerData?QUESTPOINTS@</FONT>
+			@endif@
+		</TD>
+	</TR>
+	</TABLE>
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3><FONT COLOR=YELLOW>Factions: </FONT>
+		@if?CheckReqParm?FUNCTION=EDIT@
+			<BR><FONT COLOR=WHITE>@PlayerData?FACTIONS@</FONT>
+		@else@
+			<FONT COLOR=WHITE>@PlayerData?FACTIONNAMES@</FONT>
+		@endif@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3>
+		@if?CheckReqParm?FUNCTION=EDIT@
+			<FONT COLOR=YELLOW>Equipment: </FONT>
+			@PlayerData?ITEMLIST@
+		@else@
+			<FONT COLOR=YELLOW>Equipment: </FONT><FONT COLOR=WHITE>@PlayerData?INVENTORY@</FONT>
+		@endif@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3>
+		@if?CheckReqParm?FUNCTION=EDIT@
+			<FONT COLOR=YELLOW>Abilities: </FONT><A target=HELP HREF="/abilities.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a>
+			@PlayerData?ABILITIES@
+		@else@
+			<FONT COLOR=YELLOW>Abilities: </FONT>@AbilityPlayerNext?reset@ @loop@ @AbilityPlayerNext@ <a href="javascript:openUp2('@AbilityID@');"><FONT COLOR=WHITE>@AbilityName@</FONT></a> <FONT COLOR=WHITE>/</FONT> @back@
+		@endif@
+	</TD>
+</TR>
+@if?CheckReqParm?FUNCTION=EDIT@
+<TR>
+	<TD WIDTH=100% COLSPAN=3>
+		<FONT COLOR=YELLOW>Behaviors: </FONT><A target=HELP HREF="/behaviors.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a>
+			<BR>
+				@PlayerData?BEHAVIORS@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3>
+			<P><FONT COLOR=YELLOW>Affects: </FONT><A target=HELP HREF="/affects.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a>
+			<BR>
+				@PlayerData?AFFECTS@
+	</TD>
+</TR>
+@endif@
+<TR>
+	<TD WIDTH=600 COLSPAN=3>
+		<FONT COLOR=YELLOW>Expertises: </FONT>
+		@if?CheckReqParm?FUNCTION=EDIT@
+			<FONT COLOR=WHITE>@PlayerData?EXPERTISELIST@</FONT>
+		@else@
+			<FONT COLOR=WHITE>@PlayerData?EXPERTISE@</FONT>
+		@endif@
+	</TD>
+</TR>
+<TR>
+    <TD WIDTH=100% COLSPAN=3><FONT COLOR=YELLOW>Followers: </FONT>
+        <FONT COLOR=WHITE>@PlayerData?FOLLOWERNAMES@</FONT>
+    </TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3 VALIGN=TOP>
+		@if?CheckReqParm?FUNCTION=EDIT@
+			<FONT COLOR=YELLOW>Notes: </FONT><BR>
+			<TEXTAREA NAME=NOTES ROWS=5 COLS=60>@PlayerData?NOTES@</TEXTAREA>
+		@else@
+			<FONT COLOR=YELLOW>Notes: </FONT><FONT COLOR=WHITE>@PlayerData?NOTES@</FONT>
+		@endif@
+	</TD>
+</TR>
+@if?!CheckReqParm?FUNCTION=EDIT@
+<TR>
+	<TD WIDTH=100% COLSPAN=3><FONT COLOR=YELLOW>Leveling History: </FONT><FONT COLOR=WHITE>
+	<TABLE WIDTH=100% CELLPADDING=0 CELLSPACING=0>
+	<TR><TD WIDTH=20% ROWSPAN=1000></TD><TD WIDTH=20%><FONT COLOR=YELLOW>Level</FONT></TD><TD><FONT COLOR=YELLOW>Date/Time</FONT></TD></TR>
+	@PlayerData?LEVELS@
+	</TABLE>
+	</FONT>
+	</TD>
+</TR>
+@else@
+<TR>
+	<TD WIDTH=66% COLSPAN=2><FONT COLOR=YELLOW>Titles: </FONT><BR>
+		<FONT COLOR=WHITE>@PlayerData?TITLELIST@</FONT>
+	<TD><INPUT TYPE=BUTTON NAME=ADDTITLE VALUE="Add Title" ONCLICK="ReShow();"></TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3><FONT COLOR=YELLOW>Tattoos: </FONT><BR>
+		<TEXTAREA NAME=TATTOOS ROWS=2 COLS=60>@PlayerData?TATTOOS@</TEXTAREA>
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=100% COLSPAN=3><FONT COLOR=YELLOW>Security Flags: </FONT><BR>
+		<TEXTAREA NAME=SECURITY ROWS=2 COLS=60>@PlayerData?SECURITY@</TEXTAREA>
+	</TD>
+</TR>
+@endif@
+</TABLE>
+@if?CheckReqParm?FUNCTION=EDIT@
+<BR>
+<TABLE WIDTH=100% BORDER=0>
+<TR>
+    <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=FINISHED VALUE="Finished" ONCLICK="EditDone();"></TD>
+    <TD ALIGN=CENTER><BR></TD>
+    <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=CANCEL VALUE="Cancel" ONCLICK="Cancel();"></TD>
+</TR>
+@endif@
+</TABLE>
+</FORM>
+</BODY>
+</HTML>
+@endif@
+@endif@

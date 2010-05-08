@@ -1,0 +1,29 @@
+<project name="CoffeeMUD" default="init">
+	<target name="init">
+		<echo>This Ant Build file was created by Josh Mueller for use with CoffeeMUD</echo>
+		<echo>Ant is available from the Apache Software Foundation (ant.apache.org)</echo>
+		<echo>There are three options; compile, doc, and clean</echo>
+		<echo>compile compiles all java source files in and below this directory</echo>
+		<echo>doc generates all the javadoc for packages com.planet_ink.coffee_mud.*, com.pannet_ink.fakedb, and com.planet_ink.siplet.*</echo>
+		<echo>clean removes all compiled code from this directory and below</echo>
+	</target>
+	<target name="compile">
+		<javac srcdir="." classpath=".;./lib/js.jar;./lib/jzlib.jar" nowarn="yes" deprecation="on" debug="on" memoryMaximumSize="1024m" fork="on">
+			<compilerarg value="-Xlint:unchecked" />
+    	</javac>
+		<echo>Compiliation done.</echo>
+	</target>
+	<target name="doc">
+		<echo>Beginning Javadoc generation</echo>
+		<javadoc sourcepath="." classpath=".;./lib/js.jar;./lib/jzlib.jar" destdir=".\docs" packagenames="com\planet_ink\coffee_mud.*" maxmemory="1024m" verbose="on" linksource="yes" source="1.6" author="true" version="true" use="true"/>
+		<echo>Javadoc generation complete.</echo>
+	</target>
+	<target name="clean">
+	  <delete>
+		  <fileset dir="." includes="**/*.class"/>
+	  </delete>
+	</target>
+</project>
+
+
+

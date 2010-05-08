@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+	<!-- tell spiders to sod off -->
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<link rel="STYLESHEET" TYPE="TEXT/CSS" HREF="/grinder/grinder.css">
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>CoffeeMud MUDGrinder</title>
+	<SCRIPT LANGUAGE=JavaScript>
+	<!--
+		function EditBehavior(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddBehavior(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function EditAffect(ME)
+		{
+			if(ME.selectedIndex==0)
+				ReShow();
+		}
+		function AddAffect(ME)
+		{
+			if(ME.selectedIndex>0)
+				ReShow();
+		}
+		function ChangedClass()
+		{
+			document.AREAEDIT.CHANGEDCLASS.value="true";
+			ReShow();
+		}
+		function ReShow()
+		{
+			document.AREAEDIT.action='/grinder/editexitform.cmvp';
+			document.AREAEDIT.target='MAP';
+			document.AREAEDIT.submit();
+		}
+	//-->
+	</SCRIPT>
+</head>
+<BODY>
+<CENTER>
+<h3>Modify @RequestParameter?LINK@ Exit from '@RoomID@'.</H3>
+<P><FONT COLOR=RED><H1>@RequestParameter?ERRMSG@</H1></FONT>
+<BR>
+<FORM NAME=AREAEDIT TARGET=_top METHOD=POST ACTION="/grinder/editexitdone.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=ROOM VALUE="@RoomID@">
+<INPUT TYPE=HIDDEN NAME=CHANGEDCLASS VALUE="">
+<INPUT TYPE=HIDDEN NAME=LINK VALUE="@RequestParameter?LINK@">
+<INPUT TYPE=HIDDEN NAME=AREA VALUE="@AreaName@">
+<INPUT TYPE=HIDDEN NAME=MAPSTYLE VALUE="@RequestParameter?MAPSTYLE@">
+<INPUT TYPE=HIDDEN NAME=MAPLEVEL VALUE="@RequestParameter?MAPLEVEL@">
+<INPUT TYPE=HIDDEN NAME=ACTION VALUE="MODIFYEXIT">
+<TABLE WIDTH=600 BORDER=1 CELLSPACING=0 CELLPADDIN=0>
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Exit Class:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2>
+	<SELECT NAME=CLASSES ONCHANGE="ChangedClass();">
+	@ExitData?CLASSES@
+	</SELECT>
+	</TD>
+</TR>
+@if?ExitData?ISGENERIC@
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Exit Name:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=NAME SIZE=60 VALUE="@ExitData?NAME@"></TD>
+</TR>
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Seen (Open):</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=DISPLAYTEXT SIZE=60 MAXLENGTH=255 VALUE="@ExitData?DISPLAYTEXT@"></TD>
+</TR>
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Description:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=DESCRIPTION SIZE=60 MAXLENGTH=255 VALUE="@ExitData?DESCRIPTION@"></TD>
+</TR>
+<TR>
+	<TD WIDTH=100><FONT COLOR="#66FFFF"><B>GIF filename:</B></FONT></TD>
+    <TD WIDTH=500 COLSPAN=2><INPUT TYPE=TEXT NAME=IMAGE SIZE=50 VALUE="@ExitData?IMAGE@"></TD>
+</TR>
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Level:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=LEVEL SIZE=5 VALUE="@ExitData?LEVEL@">
+	</TD>
+</TR>
+@else@
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Parameters:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=MISCTEXT SIZE=60 MAXLENGTH=255 VALUE="@ExitData?MISCTEXT@"></TD>
+</TR>
+@endif@
+@if?ExitData?ISGENERIC@
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Exit Flags:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><FONT COLOR=WHITE>
+		<INPUT TYPE=CHECKBOX NAME=ISINVISIBLE @ExitData?ISINVISIBLE@>Is Invisible<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISHIDDEN @ExitData?ISHIDDEN@>Is Hidden<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISSEEN @ExitData?ISSEEN@>Is Unseeable<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISBONUS @ExitData?ISBONUS@>Is Magical<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISLIGHT @ExitData?ISLIGHT@>Is Glowing (burning)<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISFLYING @ExitData?ISFLYING@>Requires Flight<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISCLIMBING @ExitData?ISCLIMBING@>Requires Climbing<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISEVIL @ExitData?ISEVIL@>Is Evil<BR>
+		<INPUT TYPE=CHECKBOX NAME=ISGOOD @ExitData?ISGOOD@>Is Good<BR>
+		</FONT>
+    </TD>
+</TR>
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Has a Door:</B></FONT></TD>
+    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=CHECKBOX NAME=HASADOOR @ExitData?HASADOOR@ ONCLICK="ReShow();"></TD>
+</TR>
+@if?CheckReqParm?HASADOOR=on@
+	<TR>
+		<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Seen (Closed):</B></FONT></TD>
+	    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=CLOSEDTEXT SIZE=60 MAXLENGTH=255 VALUE="@ExitData?CLOSEDTEXT@"></TD>
+	</TR>
+	<TR>
+		<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Defaults Closed:</B></FONT></TD>
+	    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=CHECKBOX NAME=DEFAULTSCLOSED @ExitData?DEFAULTSCLOSED@></TD>
+	</TR>
+	<TR>
+		<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Verb (open):</B></FONT></TD>
+	    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=OPENWORD SIZE=5 VALUE="@ExitData?OPENWORD@"></TD>
+	</TR>
+	<TR>
+		<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Verb (close):</B></FONT></TD>
+	    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=CLOSEWORD SIZE=5 VALUE="@ExitData?CLOSEWORD@"></TD>
+	</TR>
+	<TR>
+		<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Door name (door):</B></FONT></TD>
+	    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=DOORNAME SIZE=5 VALUE="@ExitData?DOORNAME@"></TD>
+	</TR>
+	@if?!CheckReqParm?ISREADABLE=on@
+	<TR>
+		<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Has a Lock:</B></FONT></TD>
+	    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=CHECKBOX NAME=HASALOCK @ExitData?HASALOCK@ ONCLICK="ReShow();"></TD>
+	</TR>
+	@endif@
+	@if?CheckReqParm?HASALOCK=on@
+		<TR>
+			<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Defaults Locked:</B></FONT></TD>
+		    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=CHECKBOX NAME=DEFAULTSLOCKED @ExitData?DEFAULTSLOCKED@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Key Code:</B></FONT></TD>
+		    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=KEYNAME SIZE=10 VALUE="@ExitData?KEYNAME@"></TD>
+		</TR>
+	@else@
+		<TR>
+			<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Written on:</B></FONT></TD>
+		    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=CHECKBOX NAME=ISREADABLE @ExitData?ISREADABLE@ ONCLICK="ReShow();"></TD>
+		</TR>
+		@if?CheckReqParm?ISREADABLE=on@
+		<TR>
+			<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Words written on it:</B></FONT></TD>
+		    <TD WIDTH=450 COLSPAN=2><INPUT TYPE=TEXT NAME=READABLETEXT SIZE=60 MAXLENGTH=255 VALUE="@ExitData?READABLETEXT@"></TD>
+		</TR>
+		@endif@
+	@endif@
+@endif@
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Behaviors:</B></FONT>
+	<BR><A target=HELP HREF="/behaviors.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a></TD>
+    <TD WIDTH=450 COLSPAN=2>
+	@ExitData?BEHAVIORS@
+	</TD>
+</TR>
+<TR>
+	<TD WIDTH=150><FONT COLOR="#66FFFF"><B>Affects:</B></FONT>
+	<BR><A target=HELP href="/affects.cmvp"><FONT COLOR=WHITE><I>help</I></FONT></a></TD>
+    <TD WIDTH=450 COLSPAN=2>
+	@ExitData?AFFECTS@
+	</TD>
+</TR>
+@endif@
+<TR>
+    <TD WIDTH=600 COLSPAN=3 ALIGN=CENTER>
+	<INPUT TYPE=SUBMIT NAME=FINISHED VALUE="Finished">
+	</CENTER>
+	</TD>
+</TR>
+<TR>
+    <TD WIDTH=600 COLSPAN=3 ALIGN=CENTER>
+	<INPUT TYPE=CHECKBOX NAME=MAKESAME>Duplicate in Opposite exit.
+	</CENTER>
+	</TD>
+</TR>
+</TABLE>
+</FORM>
+</CENTER>
+</BODY>
+</HTML>
+@endif@
+@endif@

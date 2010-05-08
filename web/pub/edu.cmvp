@@ -1,0 +1,15 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<link rel="coffeemud icon" href="images/coffeemud.ico" >
+<meta name="robots" content="noindex,nofollow">
+<TITLE>@ExpertiseData?NAME@</TITLE>
+</HEAD>
+<BODY BGCOLOR=#000066 TEXT=#FFFFFF>
+<H3>@ExpertiseData?NAME@</H3>
+<TABLE WIDTH=100%>
+<TR><TD WIDTH=20% VALIGN=TOP><B>Description</B></TD><TD>@ExpertiseData?SHORTHELP@</TD></TR>
+<TR><TD WIDTH=20% VALIGN=TOP><B>Cost</B></TD><TD>@ExpertiseData?COST@</TD></TR>
+<TR><TD WIDTH=20% VALIGN=TOP><B>Requires</B></TD><TD>@ExpertiseData?REQUIRES@</TD></TR>
+</BODY>
+</HTML>

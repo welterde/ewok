@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_CMDRACES=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+    <link rel="grinder icon" href="/images/grinder.ico" >
+</head>
+<body BGCOLOR=BLACK>
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+@if?CheckReqParm?FUNCTION=DELRACE@
+    var v='@MUDGrinder?DELRACE@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Race deleted.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=EDITRACE@
+    var v='@MUDGrinder?EDITRACE@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Race created/modified.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=RERACE@
+    @if?CheckReqParm?NEWRACEID=@
+        document.location.href='race.cmvp?AUTH=@Authenticate?AUTH@&RACE=@RaceID@';
+    @else@
+        document.location.href='race.cmvp?AUTH=@Authenticate?AUTH@&RACE=@RequestParameterEncoded?NEWRACEID@&NEWRACE=@RequestParameterEncoded?NEWRACEID@';
+    @endif@
+@endif@
+//-->
+</SCRIPT>
+
+</BODY>
+</HTML>
+@endif@
+@endif@

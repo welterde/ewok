@@ -1,0 +1,51 @@
+   This product includes software developed by
+   Bo Zimmerman 
+   http://www.coffeemud.org
+
+   Bo would like to acknowledge and thank the following 
+   people for contributing, both directly and indirectly 
+   to the development of CoffeeMud.
+
+   Tim Kassebaum, for putting in lord knows how many hours 
+   doing head and documentation work for versions 3.0 - 5.x, 
+   including just about every spell, prayer, subclasses, and 
+   common skill, for uncountable ideas (and for documenting 
+   those too), and for SOMEHOW finding time to playtest amidst
+   all this. 
+   
+   Benny Edwards, for breaking or finding exploits in just 
+   about every administrative feature he had access to.  
+   Stuart, a patient and attentive problem solver, and then 
+   there's Hojo- a playtesting, bugfinding FOOL!
+
+   Jeremy Vyska for the base of clans, factions, parent/child areas
+   and for other miscellaneous and useful enhancements.
+
+   The good people at www.yourkit.com for supporting us with
+   licenses to their java profiling software.
+
+   Jef Kamenek and David Walters, for single handedly adding 
+   the ANSI support, Archon Help, some very important changes 
+   to the base MUD class, and for writing the base of the web 
+   server system.
+
+   Thomas Neumann for the fakedb package.
+
+   George Reese for kindly providing his I3 java implementation.
+
+   Sky for the MovingRoom Behavior.
+
+   Lee H. Fox - for numerous standard weapon, armor, and MOB objects 
+   and for providing the base code for the Drow behavior.  Lee also 
+   wrote some of the Mage spells, including "Grace of the Cat", 
+   "Giant Strength" and many others.
+
+   Michael Rundell - for a few of the standard weapon, armor, and MOB 
+   objects, including the coded Dragon object, and for providing 
+   the base code for the Dragonbreath ability and the MOBEater behavior.
+
+   Tyra and Lori - for single handedly inspiring this project.  I have 
+   never ever forgotten that fact, nor the unusual circumstances 
+   surrounding it.  I hope in time they have forgiven me. :)
+   
+   - Bo Zimmerman

@@ -1,0 +1,14 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+<meta name="robots" content="noindex,nofollow">
+<TITLE>@BehaviorID@</TITLE>
+</HEAD>
+<BODY BGCOLOR=#000066 TEXT=#FFFFFF>
+<H3>@BehaviorID@</H3>
+<PRE>
+@BehaviorData?help@
+</PRE>
+</BODY>
+</HTML>

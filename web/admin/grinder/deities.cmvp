@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+    <link rel="grinder icon" href="/images/grinder.ico" >
+    <title>Deities List</title>
+    <script language=JavaScript>
+    <!--
+        function Deity(area,room,mobcode)
+        {
+        	var w;
+        	area=encodeURI(area);
+        	room=encodeURI(room);
+        	mobcode=encodeURI(mobcode);
+        	room=room.replace("#","%23");
+            var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+            w=window.open("editmobform.cmvp?AUTH=@Authenticate?AUTH@&AREA="+area+"&ROOM="+room+"&MOB="+mobcode+"&SINGLEMOB=true",
+            	"MAP",strFeatures, false);
+        }
+        
+        function pickedRoom(area,room,name)
+        {
+    		var mobcode='NEWDEITY';
+        	area=encodeURI(area);
+        	room=encodeURI(room);
+        	var mobcode=encodeURI(mobcode);
+        	room=room.replace("#","%23");
+            var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+            w=window.open("editmobform.cmvp?AUTH=@Authenticate?AUTH@&NEWMOBNAME="+name+"&AREA="+area+"&ROOM="+room+"&MOB="+mobcode+"&SINGLEMOB=true",
+            	"EDITDEITY",strFeatures, false);
+        }
+        
+        function NewDeity(locitem,name)
+        {
+        	var lindex=locitem.selectedIndex;
+        	var location='';
+        	var w;
+        	if(lindex>=0)
+        		location=locitem.options[lindex].value;
+        	name=encodeURI(name);
+	    	if(location == '')
+        	{
+	            var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=200,width=650,alwaysRaised=yes,dependent=yes";
+	            w=window.open("pickroom.cmvp?REST="+name,"PICKROOM",strFeatures, false);
+        	}
+        	else 
+        	{
+	            var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+        		var div=location.indexOf('~|~');
+        		var room=location.substr(0,div);
+        		var area=location.substr(div+3,location.length);
+        		pickedRoom(area,room,name);
+            }
+        }
+        
+        function Clicked(action)
+        {
+            document.RESOURCES.action=action;
+            document.RESOURCES.submit();
+        }
+        
+        function Refresh()
+        {
+            document.RESOURCES.action='deities.cmvp';
+            document.RESOURCES.submit();
+        }
+    //-->
+    </script>
+</head>
+<body BGCOLOR=BLACK>
+    <TABLE WIDTH=100% BORDER=0>
+    <TR>
+    <TD WIDTH=33% ALIGN=LEFT VALIGN=TOP></TD>
+    <TD WIDTH=33% ALIGN=CENTER VALIGN=TOP><IMG SRC="/grinder/images/grinder.gif" WIDTH=78 HEIGHT=122 ALT="" BORDER="0"></TD>
+    <TD WIDTH=33% ALIGN=RIGHT VALIGN=TOP>
+        <TABLE WIDTH=50% BORDER=1>
+        <TR><TD BGCOLOR=WHITE ALIGN=CENTER><FONT COLOR=BLACK SIZE=-1><B>Menu</B></FONT></TD></TR>
+        <TR><TD><a href="javascript:Clicked('/grinder/loggedin.cmvp');"><FONT COLOR=WHITE SIZE=-1><B>MUDGrinder Menu</B></FONT></A></TD></TR>
+        <TR><TD><a href="javascript:Refresh();"><FONT COLOR=WHITE SIZE=-1><B>Refresh Page</B></FONT></A></TD></TR>
+        </TABLE>
+    </TD>
+    </TR>
+    </TABLE>
+<CENTER>
+<FORM NAME=RESOURCES TARGET=_top METHOD=POST ACTION="deities.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=AREA VALUE="">
+<INPUT TYPE=HIDDEN NAME=ROOM VALUE="">
+    <TABLE WIDTH=100% BORDER=1>
+    <TR><TD WIDTH=100% COLSPAN=6 BGCOLOR=WHITE ALIGN=CENTER><FONT COLOR=BLACK><H2>CoffeeMud @MudServerVersion@ Deity Manager</H2></FONT></TD></TR>
+    <TR>
+	    <TD WIDTH=40%><B><FONT COLOR=YELLOW>Name</FONT></b></TD>
+	    <TD WIDTH=40%><B><FONT COLOR=YELLOW>Location</FONT></b></TD>
+	    <TD WIDTH=10%><B><FONT COLOR=YELLOW>Priests</FONT></B></TD>
+	    <TD WIDTH=10%><B><FONT COLOR=YELLOW>Followers</FONT></B></TD>
+    </TR>
+    @DeityNext?RESET@
+    @loop@
+    @DeityNext@
+    <TR>
+	    <TD>
+		<INPUT TYPE=HIDDEN NAME=ROOM@DeityData?MOBCODE&ENCODED@ VALUE="">
+	    <a href="javascript:Deity('@DeityData?AREA@','@DeityData?ROOM@','@DeityData?MOBCODE@')"><FONT COLOR=WHITE><B>@DeityID@</B></FONT></a>
+	    </TD>
+	    <TD><FONT COLOR=WHITE>@DeityData?LOCATION@</FONT></TD>
+	    <TD><FONT COLOR=WHITE>@DeityData?NUMPRIESTS@</FONT></TD>
+	    <TD><FONT COLOR=WHITE>@DeityData?NUMFOLLOWERS@</FONT></TD>
+    </TR>
+    @back@
+    <TR>
+    <TD COLSPAN=5><a href="javascript:if(document.RESOURCES.NEWDEITYID.value!='')NewDeity(document.RESOURCES.LOCATION,''+document.RESOURCES.NEWDEITYID.value)"><FONT COLOR=WHITE><B>Create New:</a>
+    &nbsp;<INPUT TYPE=TEXT NAME=NEWDEITYID SIZE=70>
+    &nbsp;in
+    <SELECT NAME=LOCATION>
+    <OPTION VALUE="">New Location
+    @DeityNext?RESET&HEAVENS@
+    @loop@
+	    @DeityNext?HEAVENS@
+	    <OPTION VALUE="@DeityData?ROOM@~|~@DeityData?AREA@">@DeityData?ROOM@
+    @back@
+    </SELECT>
+    </B></FONT>
+    </TD>
+    </TR>
+    </TABLE>
+    <P>
+    <TABLE WIDTH=100% BORDER=0>
+    <TR>
+    <TD WIDTH=33% ALIGN=CENTER>
+    </TD>
+    <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=REFRESH VALUE="Refresh" ONCLICK="Refresh();"></TD>
+    <TD WIDTH=33% ALIGN=CENTER>
+    </TD>
+    </TR>
+    </TABLE>
+    <CENTER>
+    </CENTER>
+</FORM>
+</BODY>
+</HTML>
+@endif@
+@endif@

@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ <BODY> @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ <BODY> @AddFile?/grinder/nopriv.cmvp@ @else@
+
+<head>
+	<!--map.cmvp-->
+	<!-- tell spiders to sod off -->
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<title>CoffeeMud MUDGrinder</title>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<SCRIPT LANGUAGE="JavaScript">
+	<!--
+		function RC(room)
+		{
+			Clicked('rmmenu.cmvp','',room,'');
+		}
+		function EC(dir,room)
+		{
+			Clicked('lnkxmenu.cmvp',dir,room,'');
+		}
+		function CEX(dir,room,room2)
+		{
+			Clicked('edxmenu.cmvp',dir,room,room2);
+		}
+		function Clicked(action,link,room,linksto)
+		{
+			document.SELECTAREA.OLDROOM.value=document.SELECTAREA.ROOM.value;
+			document.SELECTAREA.OLDLINK.value=document.SELECTAREA.LINK.value;
+			document.SELECTAREA.ROOM.value=room;
+			document.SELECTAREA.LINK.value=link;
+			document.SELECTAREA.LINKSTO.value=linksto;
+			document.SELECTAREA.action='/grinder/'+action;
+			document.SELECTAREA.submit();
+		}
+		
+function preloadImages() {
+var image1 = new Image();
+image1.src = 'images\DD.gif';
+var image2 = new Image();
+image2.src = 'images\DDR.gif';
+var image3 = new Image();
+image3.src = 'images\DE.gif';
+var image4 = new Image();
+image4.src = 'images\DER.gif';
+var image5 = new Image();
+image5.src = 'images\DN.gif';
+var image6 = new Image();
+image6.src = 'images\DNR.gif';
+var image7 = new Image();
+image7.src = 'images\DS.gif';
+var image8 = new Image();
+image8.src = 'images\DSR.gif';
+var image9 = new Image();
+image9.src = 'images\DU.gif';
+var image10 = new Image();
+image10.src = 'images\DUR.gif';
+var image11 = new Image();
+image11.src = 'images\DW.gif';
+var image12 = new Image();
+image12.src = 'images\DWR.gif';
+var image13 = new Image();
+image13.src = 'images\ED.gif';
+var image14 = new Image();
+image14.src = 'images\EE.gif';
+var image15 = new Image();
+image15.src = 'images\EN.gif';
+var image16 = new Image();
+image16.src = 'images\ES.gif';
+var image17 = new Image();
+image17.src = 'images\EU.gif';
+var image18 = new Image();
+image18.src = 'images\EW.gif';
+var image19 = new Image();
+image19.src = 'images\OD.gif';
+var image20 = new Image();
+image20.src = 'images\ODR.gif';
+var image21 = new Image();
+image21.src = 'images\OE.gif';
+var image22 = new Image();
+image22.src = 'images\OER.gif';
+var image23 = new Image();
+image23.src = 'images\ON.gif';
+var image24 = new Image();
+image24.src = 'images\ONR.gif';
+var image25 = new Image();
+image25.src = 'images\OS.gif';
+var image26 = new Image();
+image26.src = 'images\OSR.gif';
+var image27 = new Image();
+image27.src = 'images\OU.gif';
+var image28 = new Image();
+image28.src = 'images\OUR.gif';
+var image29 = new Image();
+image29.src = 'images\OW.gif';
+var image30 = new Image();
+image30.src = 'images\OWR.gif';
+var image31 = new Image();
+image31.src = 'images\UD.gif';
+var image32 = new Image();
+image32.src = 'images\UDR.gif';
+var image33 = new Image();
+image33.src = 'images\UE.gif';
+var image34 = new Image();
+image34.src = 'images\UER.gif';
+var image35 = new Image();
+image35.src = 'images\UN.gif';
+var image36 = new Image();
+image36.src = 'images\UNR.gif';
+var image37 = new Image();
+image37.src = 'images\US.gif';
+var image38 = new Image();
+image38.src = 'images\USR.gif';
+var image39 = new Image();
+image39.src = 'images\UU.gif';
+var image40 = new Image();
+image40.src = 'images\UUR.gif';
+var image41 = new Image();
+image41.src = 'images\UW.gif';
+var image42 = new Image();
+image42.src = 'images\UWR.gif';
+
+}
+
+function showSelected() {
+	showDiv(document.all.layerSelect.value);
+}
+
+function showDiv(pass) { 
+  document.SELECTAREA.MAPLEVEL.value=pass;
+  var divs = document.getElementsByTagName('div'); 
+  for(i=0;i<divs.length;i++){ 
+    if((divs[i].id.match(pass))||(divs[i].id.match('layersMenu'))){//if they are 'see' divs 
+      if (document.getElementById) // DOM3 = IE5, NS6 
+        divs[i].style.visibility="visible";// show/hide 
+      else 
+        if (document.layers) // Netscape 4 
+          document.layers[divs[i]].display = 'visible'; 
+        else // IE 4 
+          document.all.divs[i].visibility = 'visible'; 
+    } else { 
+      if (document.getElementById) 
+        divs[i].style.visibility="hidden"; 
+      else 
+        if (document.layers) // Netscape 4 
+          document.divs[i].visibility = 'hidden'; 
+        else // IE 4 
+          document.all.divs[i].visibility = 'hidden'; 
+    } 
+  } 
+} 
+
+function setVariables() {
+  if (navigator.appName == "Netscape") {
+    v=".top=";
+    w=".left=";
+    dS="document.";
+    sD="";
+    x="window.pageXOffset";
+    y="window.pageYOffset";
+  }
+  else {
+    v=".pixelTop=";
+    w=".pixelLeft=";
+    dS="";
+    sD=".style";
+    x="document.body.scrollLeft";
+    y="document.body.scrollTop";
+   }
+}
+
+function checkLocation() {
+  object="layersMenu";
+  yy=eval(y);
+  xx=eval(x);
+  eval(dS+object+sD+v+yy);
+  eval(dS+object+sD+w+xx);
+  setTimeout("checkLocation()",10);
+}
+@if?AreaData?ISGRID@
+	document.onclick=cellclick
+	
+	function cellclick(e)
+	{
+		if(!e) var e=window.event;
+		var tg = (e.target) ? e.target : e.srcElement;
+		if((tg!=null)&&(tg.id!=null)&&(tg.id.length>0)&&(tg.id.substr(0,1)=='X'))
+		{
+			var x=tg.id.substr(1);
+			var ypos=x.indexOf('_');
+			if(ypos>0)
+			{
+				y=x.substr(ypos+1);
+			 	x=x.substr(0,ypos);
+			 	var room=document.SELECTAREA.ROOM.value;
+			 	var link=document.SELECTAREA.LINK.value;
+			 	if((room.indexOf('_')<0)&&(room.indexOf('#')>=0))
+			 	{
+					document.SELECTAREA.OLDROOM.value=room;
+					document.SELECTAREA.OLDLINK.value=link;
+				}
+				var num=y;
+				if(x!='0')
+				{
+					var gridystr='@AreaData?GRIDY@';
+					var length=gridystr.length;
+					while(y.length<length) y='0'+y;
+					num=x+y;
+				}
+				document.SELECTAREA.ROOM.value='@AreaName@#'+num;
+				document.SELECTAREA.LINK.value='';
+				document.SELECTAREA.LINKSTO.value='';
+				document.SELECTAREA.action='/grinder/grdxmenu.cmvp';
+				document.SELECTAREA.submit();
+		 	}
+		}
+	}
+@endif@
+	//-->
+	</SCRIPT>
+</head>
+
+@if?CheckReqParm?MAPSTYLE=Z@
+	@if?!CheckReqParm?MAPLEVEL=@ 
+	<BODY OnLoad="preloadImages();setVariables();checkLocation();setTimeout(showDiv('@RequestParameterEncoded?MAPLEVEL@'),1000)">
+	@else@
+	<BODY OnLoad="preloadImages();setVariables();checkLocation()">
+	@endif@
+@else@
+	<BODY>
+@endif@
+
+<FORM NAME=SELECTAREA METHOD=POST ACTION="" TARGET=MENU>
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=AREA VALUE="@AreaName@">
+<INPUT TYPE=HIDDEN NAME=MAPSTYLE VALUE="@RequestParameter?MAPSTYLE@">
+<INPUT TYPE=HIDDEN NAME=MAPLEVEL VALUE="">
+<INPUT TYPE=HIDDEN NAME=ROOM VALUE="">
+<INPUT TYPE=HIDDEN NAME=LINK VALUE="">
+<INPUT TYPE=HIDDEN NAME=LINKSTO VALUE="">
+<INPUT TYPE=HIDDEN NAME=OLDROOM VALUE="">
+<INPUT TYPE=HIDDEN NAME=OLDLINK VALUE="">
+@MUDGrinder?AREAMAP@
+</FORM>
+
+@endif@
+@endif@
+</BODY>
+</HTML>

@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_CMDSOCIALS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<html>
+<head>
+    <link rel="grinder icon" href="/images/grinder.ico" >
+</head>
+<body BGCOLOR=BLACK>
+<SCRIPT LANGUAGE=JavaScript>
+<!--
+@if?CheckReqParm?FUNCTION=DELSOCIAL@
+    var v='@SocialData?DELETE@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Social deleted.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=EDITSOCIAL@
+    var v='@SocialData?EDIT@';
+    if(v != '')
+        alert(v);
+    else
+        alert('Social created/modified.');
+    opener.Refresh();
+    window.close();
+@endif@
+@if?CheckReqParm?FUNCTION=RESOCIAL@
+    @if?CheckReqParm?NEWSOCIALID=@
+        document.location.href='social.cmvp?AUTH=@Authenticate?AUTH@&SOCIAL=@RequestParameterEncoded?SOCIAL@';
+    @else@
+        document.location.href='social.cmvp?AUTH=@Authenticate?AUTH@&SOCIAL=@RequestParameterEncoded?NEWSOCIALID@';
+    @endif@
+@endif@
+//-->
+</SCRIPT>
+
+</BODY>
+</HTML>
+@endif@
+@endif@

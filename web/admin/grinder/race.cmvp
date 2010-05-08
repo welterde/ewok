@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?AUTH_CMDRACES=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<html>
+<head>
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>Race Manager</title>
+	<script language=JavaScript>
+	<!--
+		function openUp2(named)
+		{
+			var strFeatures="top=200,left=50,resizeable=no,scrollbars=yes,height=400,width=650,alwaysRaised=yes,dependent=yes";
+			w=window.open("/property.cmvp?ABILITY="+named,
+			            "Ability",strFeatures, false);
+		}
+        function AddNewItem(FIELD)
+        {
+            var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+            w=window.open("edititemform.cmvp?AUTH=@Authenticate?AUTH@&ITEM=NEW&ROOM=ANY&RESPONSEFIELD=RESOURCES.REPLACE&REPLACEFIELD="+FIELD,
+            	"Race_Item",strFeatures, false);
+        }
+        function AddItem(ME)
+        {
+            ReShow();
+        }
+        function EditItemDone()
+        {
+            ReShow();
+        }
+        function EditItem(ME,FIELD)
+        {
+            var strFeatures="top=0,left=75,resizeable=no,scrollbars=yes,height=600,width=650,alwaysRaised=yes,dependent=yes";
+            w=window.open("edititemform.cmvp?AUTH=@Authenticate?AUTH@&ITEM="+ME+"&ROOM=ANY&RESPONSEFIELD=RESOURCES.REPLACE&REPLACEFIELD="+FIELD,
+            	"Race_Item",strFeatures, false);
+        }
+		function AddMember(v)
+		{
+			ReShow();
+		}
+		function EditMember(v)
+		{
+			ReShow();
+		}
+        function EditAffect(ME)
+        {
+            if(ME.selectedIndex==0)
+                ReShow();
+        }
+        function AddAffect(ME)
+        {
+            if(ME.selectedIndex>0)
+                ReShow();
+        }
+        function NewRace()
+        {
+            var raceid=window.prompt('Enter a new unique ID for your Race (no spaces):');
+            if(raceid==null)
+                return;
+            if(raceid.length==0)
+                return;
+            if(raceid.indexOf(' ')>=0)
+            {
+                window.alert('No spaces are allowed in your ID!');
+                return;
+            }
+            document.RESOURCES.NEWRACEID.value=raceid;
+            document.RESOURCES.FUNCTION.value='RERACE';
+            document.RESOURCES.action='/grinder/racedo.cmvp';
+            document.RESOURCES.submit();
+        }
+		function Delete()
+		{
+			if(confirm('Delete this generic race?! Confirm!'))
+			{
+				if(confirm('Press OK to Delete this race!'))
+				{
+					document.RESOURCES.action='racedo.cmvp';
+					document.RESOURCES.FUNCTION.value='DELRACE';
+					document.RESOURCES.submit();
+				}
+			}
+		}
+		function EditDone()
+		{
+		    @if?RaceData?ISNEWRACE@
+                if(confirm('Create this new race?'))
+            @else@
+                @if?RaceData?ISGENERIC@
+                    if(confirm('Submit your changes to this race?'))
+                @else@
+        			if(confirm('Submitting these changes will convert your standard Race to a Generic Race.  Are you absolutely sure?'))
+                @endif@
+    	    @endif@
+                {
+                    document.RESOURCES.action='racedo.cmvp';
+                    document.RESOURCES.FUNCTION.value='EDITRACE';
+                    document.RESOURCES.submit();
+                }
+		}
+		function ReShow()
+		{
+			document.RESOURCES.FUNCTION.value='';
+			document.RESOURCES.action='/grinder/race.cmvp';
+			document.RESOURCES.submit();
+		}
+        function ReRace()
+        {
+            document.RESOURCES.FUNCTION.value='RERACE';
+            document.RESOURCES.action='/grinder/racedo.cmvp';
+            document.RESOURCES.submit();
+        }
+		function Cancel()
+		{
+    		  window.close();
+		}
+		function OpenUp(file,named)
+		{
+			var strFeatures="top=200,left=50,scrollbars=yes,resizeable=no,height=400,width=650,alwaysRaised=yes,dependent=yes";
+			w=window.open("/"+file+"?HELPTOPIC="+named,
+			            "Help",strFeatures, false);
+		}
+        function Clicked(action)
+        {
+            document.RESOURCES.action=action;
+            document.RESOURCES.submit();
+        }
+	//-->
+	</script>
+</head>
+<body BGCOLOR=BLACK>
+<FORM NAME=RESOURCES TARGET=_top METHOD=POST ACTION="race.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=NEWRACEID VALUE="">
+<INPUT TYPE=HIDDEN NAME=REPLACE VALUE="">
+<INPUT TYPE=HIDDEN NAME=FUNCTION VALUE="">
+<INPUT TYPE=HIDDEN NAME=RACE VALUE="@RequestParameter?RACE@">
+<INPUT TYPE=HIDDEN NAME=NEWRACE VALUE="@RequestParameter?NEWRACE@">
+@if?CheckReqParm?RACE=@
+	Select a race above to view/edit.
+@else@
+	<TABLE WIDTH=100% BORDER=1 CELLSPACING=0 CELLPADDING=0>
+        <TR>
+            <TD WIDTH=25%><FONT COLOR=YELLOW>Race ID: </FONT></TD>
+            <TD WIDTH=66%><FONT COLOR=WHITE>@RequestParameter?RACE@</FONT></TD>
+        </TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Name: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=20 NAME=NAME VALUE="@RaceData?NAME@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Racial Category: </FONT></TD>
+			<TD WIDTH=66%>
+				<SELECT NAME=CAT>
+				@RaceCatNext?RESET@
+				@loop@
+				@RaceCatNext?ALL@
+				<OPTION VALUE="@RequestParameter?RACECAT@" @if?CheckReqParm?RACECAT=@@RaceData?CAT@@ @SELECTED@endif@>@RequestParameter?RACECAT@
+				@back@
+				</SELECT>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Base Weight: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=10 NAME=BWEIGHT VALUE="@RaceData?BWEIGHT@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Weight Variance: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=10 NAME=VWEIGHT VALUE="@RaceData?VWEIGHT@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Base Male Height: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=10 NAME=MHEIGHT VALUE="@RaceData?MHEIGHT@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Base Female Height: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=10 NAME=FHEIGHT VALUE="@RaceData?FHEIGHT@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Height Variance: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=10 NAME=VHEIGHT VALUE="@RaceData?VHEIGHT@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Disabled Flags: </FONT></TD>
+			<TD WIDTH=66%><SELECT NAME=DISFLAGS MULTIPLE>@RaceData?DISFLAGS@</SELECT></TD>
+		</TR>
+        <TR>
+            <TD WIDTH=25%><FONT COLOR=YELLOW>Availability: </FONT></TD>
+            <TD WIDTH=66%><SELECT NAME=PLAYABLEID>@RaceData?PLAYABLEID@</SELECT></TD>
+        </TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Leave Text: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=20 NAME=LEAVESTR VALUE="@RaceData?LEAVESTR@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Arrive Text: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=TEXT SIZE=20 NAME=ARRIVESTR VALUE="@RaceData?ARRIVESTR@"></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Health Race: </FONT></TD>
+			<TD WIDTH=66%><SELECT NAME=HEALTHRACE>@RaceData?HEALTHRACE@</SELECT></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Event Race: </FONT></TD>
+			<TD WIDTH=66%><SELECT NAME=EVENTRACE>@RaceData?EVENTRACE@</SELECT></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Body Parts: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?BODY&FONT=<FONT COLOR=WHITE SIZE=-2>@</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Unwearable Locs: </FONT></TD>
+			<TD WIDTH=66%><SELECT NAME=WEARID MULTIPLE SIZE=5 >@RaceData?WEARID@</SELECT></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Never create corpse: </FONT></TD>
+			<TD WIDTH=66%><INPUT TYPE=CHECKBOX NAME=BODYKILL @RaceData?BODYKILL@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>EStat Adjustments: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?ESTATS@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>CharStat Adjustments: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?ASTATS@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>CharStat Settings: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?CSTATS@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>CharState Adjustments: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?ASTATE@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Starting CharState Adj: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?STARTASTATE@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Resources: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?RESOURCES@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Outfit: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?OUTFIT@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Natural Weapon: </FONT></TD>
+			<TD WIDTH=66%>@RaceData?WEAPON@></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Weapons Race: </FONT></TD>
+			<TD WIDTH=66%><SELECT NAME=WEAPONRACE>@RaceData?WEAPONRACE@</SELECT></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Racial Abilities: </FONT></TD>
+			<TD WIDTH=66%><FONT COLOR=WHITE SIZE=-1>@RaceData?RABLE&FONT=<FONT COLOR=WHITE SIZE=-2>@</FONT></TD>
+		</TR>
+		<TR>
+			<TD WIDTH=25%><FONT COLOR=YELLOW>Cultural Abilities: </FONT></TD>
+			<TD WIDTH=66%><FONT COLOR=WHITE SIZE=-1>@RaceData?CABLE&FONT=<FONT COLOR=WHITE SIZE=-2>@</FONT></TD>
+		</TR>
+        <TR>
+            <TD><FONT COLOR=YELLOW>Help Entry: </FONT></TD>
+            <TD><TEXTAREA ROWS=10 COLS=55 NAME=GENHELP>@RaceData?GENHELP@</TEXTAREA></TD>
+        </TR>
+	</TABLE>
+@endif@
+<BR>
+<TABLE WIDTH=100% BORDER=0>
+<TR>
+    @if?!CheckReqParm?RACE=@
+        @if?RaceData?ISNEWRACE@
+        <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=FINISHED VALUE="Create" ONCLICK="EditDone();"></TD>
+        @else@
+        <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=FINISHED VALUE="Modify" ONCLICK="EditDone();"></TD>
+        @endif@
+        @if?RaceData?ISGENERIC@
+            <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=DELETE VALUE="Delete" ONCLICK="Delete();"></TD>
+        @endif@
+        <TD ALIGN=CENTER><INPUT TYPE=BUTTON NAME=CANCEL VALUE="Cancel" ONCLICK="Cancel();"></TD>
+    @endif@
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>
+@endif@
+@endif@

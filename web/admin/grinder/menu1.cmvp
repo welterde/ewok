@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+@if?!Authenticate@ @AddFile?/grinder/failedlogin.cmvp@ @else@
+@if?!CheckAuthCode?ANYMODAREAS=true@ @AddFile?/grinder/nopriv.cmvp@ @else@
+
+<html>
+<head>
+	<!-- tell spiders to sod off -->
+	<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+	<link rel="STYLESHEET" TYPE="TEXT/CSS" HREF="/grinder/grinder.css">
+ 	<link rel="grinder icon" href="/images/grinder.ico" >
+	<title>CoffeeMud MUDGrinder</title>
+	<script language=JavaScript>
+	<!--
+		function Clicked(action)
+		{
+			document.AREAEDIT.action=action;
+			document.AREAEDIT.submit();
+		}
+		function Clicked(action)
+		{
+			document.AREAEDIT.action=action;
+			document.AREAEDIT.submit();
+		}
+	//-->
+	</script>
+</head>
+<BODY>
+<FORM NAME=AREAEDIT TARGET=_top METHOD=POST ACTION="/grinder/quickfind.cmvp">
+<INPUT TYPE=HIDDEN NAME=AUTH VALUE="@Authenticate?AUTH@">
+<INPUT TYPE=HIDDEN NAME=AREA VALUE="@AreaName@">
+<INPUT TYPE=HIDDEN NAME=MAPSTYLE VALUE="@RequestParameter?MAPSTYLE@">
+<INPUT TYPE=HIDDEN NAME=MAPLEVEL VALUE="@RequestParameter?MAPLEVEL@">
+
+<IMG SRC="/grinder/images/grinder.gif" WIDTH=10% HEIGHT=75% ALT="" ALIGN=LEFT BORDER="0">
+<TABLE WIDTH=90% CELLSPACING=0 CELLPADDING=0 BORDER=0>
+<TR>
+	<TD WIDTH=50% ALIGN=LEFT>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT TYPE=TEXT NAME=QUICKFIND VALUE="">
+	<INPUT TYPE=SUBMIT NAME=FINDIT VALUE="Quick Find" ONCLICK="Clicked('/grinder/quickfind.cmvp');">
+	</TD>
+	<TD WIDTH=40% ALIGN=RIGHT>
+		@if?AreaData?ISGRID@
+		<INPUT TYPE=BUTTON NAMEMOVEAREA VALUE="Move" ONCLICK="Clicked('/grinder/maparea.cmvp');">
+		@endif@
+		@if?CheckAuthCode?AUTH_CMDAREAS=true@
+		<INPUT TYPE=BUTTON NAME=EDITAREA VALUE="Edit Area" ONCLICK="Clicked('/grinder/editarea.cmvp');">
+		@endif@
+		@if?CheckAuthCode?AUTH_EXPORT=true@
+		<INPUT TYPE=BUTTON NAME=EXPORT VALUE="Export Data" ONCLICK="Clicked('/AreaXML');">
+		@endif@
+		<INPUT TYPE=BUTTON NAME=LOGOUT VALUE="Main Menu" ONCLICK="Clicked('/grinder/loggedin.cmvp');">
+	</TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>
+@endif@
+@endif@
