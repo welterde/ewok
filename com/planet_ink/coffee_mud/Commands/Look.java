@@ -1,17 +1,11 @@
 package com.planet_ink.coffee_mud.Commands;
 import com.planet_ink.coffee_mud.core.interfaces.*;
 import com.planet_ink.coffee_mud.core.*;
-import com.planet_ink.coffee_mud.Abilities.interfaces.*;
-import com.planet_ink.coffee_mud.Areas.interfaces.*;
-import com.planet_ink.coffee_mud.Behaviors.interfaces.*;
-import com.planet_ink.coffee_mud.CharClasses.interfaces.*;
-import com.planet_ink.coffee_mud.Commands.interfaces.*;
 import com.planet_ink.coffee_mud.Common.interfaces.*;
 import com.planet_ink.coffee_mud.Exits.interfaces.*;
 import com.planet_ink.coffee_mud.Items.interfaces.*;
 import com.planet_ink.coffee_mud.Locales.interfaces.*;
 import com.planet_ink.coffee_mud.MOBS.interfaces.*;
-import com.planet_ink.coffee_mud.Races.interfaces.*;
 
 import java.util.*;
 
@@ -37,7 +31,9 @@ public class Look extends StdCommand
 	public Look(){}
 
 	private String[] access={"LOOK","LOO","LO","L"};
+        @Override
 	public String[] getAccessWords(){return access;}
+        @Override
 	public boolean execute(MOB mob, Vector commands, int metaFlags)
 		throws java.io.IOException
 	{
@@ -54,9 +50,9 @@ public class Look extends StdCommand
 			else
 			if((commands.size()>2)&&(((String)commands.elementAt(1)).equalsIgnoreCase("to")))
 			   commands.removeElementAt(1);
-			String ID=CMParms.combine(commands,1);
+			String lookTarget=CMParms.combine(commands,1);
 			
-			if((ID.toUpperCase().startsWith("EXIT")&&(commands.size()==2))&&(CMProps.getIntVar(CMProps.SYSTEMI_EXVIEW)!=1))
+			if((lookTarget.toUpperCase().startsWith("EXIT")&&(commands.size()==2))&&(CMProps.getIntVar(CMProps.SYSTEMI_EXVIEW)!=1))
 			{
 				if((CMProps.getIntVar(CMProps.SYSTEMI_EXVIEW)>=2)!=CMath.bset(mob.getBitmap(), MOB.ATT_BRIEF))
 	                CMLib.commands().lookAtExitsShort(R,mob);
@@ -64,11 +60,11 @@ public class Look extends StdCommand
 	                CMLib.commands().lookAtExits(R,mob);
 				return false;
 			}
-			if(ID.equalsIgnoreCase("SELF")||ID.equalsIgnoreCase("ME"))
+			if(lookTarget.equalsIgnoreCase("SELF")||lookTarget.equalsIgnoreCase("ME"))
 				thisThang=mob;
 			
 			if(thisThang==null)
-				thisThang=R.fetchFromMOBRoomFavorsItems(mob,null,ID,Wearable.FILTER_ANY);
+				thisThang=R.fetchFromMOBRoomFavorsItems(mob,null,lookTarget,Wearable.FILTER_ANY);
 			if((thisThang==null)
 			&&(commands.size()>2)
 			&&(((String)commands.elementAt(1)).equalsIgnoreCase("in")))
@@ -86,7 +82,7 @@ public class Look extends StdCommand
             Environmental lookingTool=null;
 			if(thisThang==null)
 			{
-				dirCode=Directions.getGoodDirectionCode(ID);
+				dirCode=Directions.getGoodDirectionCode(lookTarget);
 				if(dirCode>=0)
 				{
 					Room room=R.getRoomInDir(dirCode);
@@ -153,6 +149,7 @@ public class Look extends StdCommand
 		return false;
 	}
 	
+        @Override
 	public boolean canBeOrdered(){return true;}
 
 	
