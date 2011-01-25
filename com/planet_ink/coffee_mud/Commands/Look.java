@@ -17,6 +17,7 @@ import java.util.*;
 
 /* 
    Copyright 2000-2010 Bo Zimmerman
+   Copyright 2011 Bobby Bailey
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -41,12 +42,7 @@ public class Look extends StdCommand
 		throws java.io.IOException
 	{
 		Room R=mob.location();
-		boolean quiet=false;
-		if((commands!=null)&&(commands.size()>1)&&(((String)commands.lastElement()).equalsIgnoreCase("UNOBTRUSIVELY")))
-		{
-			commands.removeElementAt(commands.size()-1);
-			quiet=true;
-		}
+
 		String textMsg="<S-NAME> look(s) ";
 		if(R==null) return false;
 		if((commands!=null)&&(commands.size()>1))
@@ -141,7 +137,7 @@ public class Look extends StdCommand
 					return false;
 				}
 
-			CMMsg msg=CMClass.getMsg(mob,R,null,CMMsg.MSG_LOOK,(quiet?null:textMsg+"around."),CMMsg.MSG_LOOK,(quiet?null:textMsg+"at you."),CMMsg.MSG_LOOK,(quiet?null:textMsg+"around."));
+			CMMsg msg=CMClass.getMsg(mob,R,null,CMMsg.MSG_LOOK,null,CMMsg.MSG_LOOK,null,CMMsg.MSG_LOOK,null);
 			if(R.okMessage(mob,msg))
 				R.send(mob,msg);
 			if((CMath.bset(mob.getBitmap(),MOB.ATT_AUTOEXITS))
