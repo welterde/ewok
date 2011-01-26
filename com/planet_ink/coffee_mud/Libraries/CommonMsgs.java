@@ -20,6 +20,7 @@ import java.io.IOException;
 
 /*
    Copyright 2000-2010 Bo Zimmerman
+   Copyright 2011 Bobby Bailey
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -148,10 +149,8 @@ public class CommonMsgs extends StdLibrary implements CommonCommands
 
 	public void postLook(MOB mob, boolean quiet)
 	{
-		if(quiet)
-			forceStandardCommand(mob,"Look",CMParms.makeVector("LOOK","UNOBTRUSIVELY"));
-		else
-			forceStandardCommand(mob,"Look",CMParms.makeVector("LOOK"));
+                // LOOK always behaves quietly now.
+		forceStandardCommand(mob,"Look",CMParms.makeVector("LOOK"));
 	}
 
 	public void postFlee(MOB mob, String whereTo)
